@@ -14,13 +14,25 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from equation_system_calculator.views import EquationSolver
 from django.urls import include, path
 
+from equation_system_calculator.views.equation_solver_view import solve, solve_equations
+from equation_system_calculator.views.equation_solver_view import EquationSolver
+from equation_system_calculator.views.another_post_view  import AnotherPostView
+from equation_system_calculator.views.ordinates_post_view import OrdinatesPostView
+from django.urls import include, path
 
 urlpatterns = [
-    path('calculator/', include('equation_system_calculator.urls')),
-    # other paths...
+# Include app-level URLs
+    #path('calculator/', include('equation_system_calculator.urls')),
+    # path('calculator/solve/', solve),
+    # path('calculator/solve_equations/', solve_equations),
+    #include('equation_system_calculator.urls'),
+    #path('equation_solver/', EquationSolver.as_view(), name='equation_solver'),
+    path('another_post/', AnotherPostView.as_view(), name='another_post'),
+    path('calculator/', include('equation_system_calculator.urls')), 
+    path('equation_solver/', EquationSolver.as_view(), name='equation_solver'),
+    path('ordinates/', OrdinatesPostView.as_view(), name='ordinates')
 ]
 
 
