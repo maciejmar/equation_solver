@@ -1,0 +1,35 @@
+name: Deploy Angular Application
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build
+      run: npm run build -- --prod
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy to OVH VPS
+      run: |
+        ssh -o StrictHostKeyChecking=no username@${{ secrets.OVH_VPS_IP }} << 'EOF'
+        # Commands to deploy Angular application
+        # For example, copy build artifacts to the web server's root
+        rsync -avz --delete ./dist/angular-app/ username@${{ secrets.OVH_VPS_IP }}:/path/to/web/server/root
+        EOF
