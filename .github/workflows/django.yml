@@ -13,23 +13,32 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: '3.10'
 
     - name: Install dependencies
       run: |
         pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.3
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v1
       with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: Dockerfile  # Adjust this if your Dockerfile is located elsewhere
+        push: true
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/equation_solver:latest
 
     - name: Deploy to OVH VPS
       run: |
-        ssh -o StrictHostKeyChecking=no username@${{ secrets.OVH_VPS_IP }} << 'EOF'
-        cd /path/to/your/django/project
-        git pull
-        docker-compose down
-        docker-compose up --build -d
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.OVH_VPS_IP }} << 'EOF'
+        docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/equation_solver:latest
+        docker stop equation_solver || true
+        docker rm equation_solver || true
+        docker run -d --name equation_solver -p 8001:8001 ${{ secrets.DOCKER_HUB_USERNAME }}/equation_solver:latest
         EOF
