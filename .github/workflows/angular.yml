@@ -10,10 +10,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Use Node.js
+    - name: Use Node.js 18.17.1
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '18.17.1'
+        registry-url: 'https://registry.npmjs.org'
 
     - name: Install dependencies
       run: npm install
@@ -21,15 +22,25 @@ jobs:
     - name: Build
       run: npm run build -- --prod
 
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.3
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v1
       with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: Dockerfile  # Adjust this if your Dockerfile is located elsewhere
+        push: true
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/calkulator_frontend:latest
 
     - name: Deploy to OVH VPS
       run: |
         ssh -o StrictHostKeyChecking=no username@${{ secrets.OVH_VPS_IP }} << 'EOF'
-        # Commands to deploy Angular application
-        # For example, copy build artifacts to the web server's root
-        rsync -avz --delete ./dist/angular-app/ username@${{ secrets.OVH_VPS_IP }}:/path/to/web/server/root
+        docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/calkulator_frontend:latest
+        docker stop calkulator_frontend || true
+        docker rm calkulator_frontend || true
+        docker run -d --name calkulator_frontend -p 80:80 ${{ secrets.DOCKER_HUB_USERNAME }}/angular-app:latest
         EOF

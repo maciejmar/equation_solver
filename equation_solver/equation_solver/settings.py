@@ -25,16 +25,11 @@ SECRET_KEY = 'django-insecure-$1^y0!n^bm_n0o9is4m80tjf@t*2hr*5^hbdu#0v8vx9+3l+65
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False #turn True by the development
 
-ALLOWED_HOSTS = ALLOWED_HOSTS = [
-  'localhost',
-  '127.0.0.1',
-  'http://localhost:4200',
-  'http://localhost:8001',
-   'http://localhost:4209',
-  'http://localhost:8001',
- 'http://vps-9f62e310.vps.ovh.net:8001',
- 'http://vps-9f62e310.vps.ovh.net:4209' 
-  ]
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'vps-9f62e310.vps.ovh.net'
+]
 
 
 # Application definition
@@ -130,6 +125,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles' 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

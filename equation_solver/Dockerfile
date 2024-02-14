@@ -19,5 +19,6 @@ COPY . /app/
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
+ENV PORT=8001
 # Run gunicorn server
-CMD gunicorn your_project_name.wsgi:application --bind 0.0.0.0:$PORT
+CMD gunicorn equation_solver.wsgi:application --bind 0.0.0.0:$PORT
