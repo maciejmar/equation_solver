@@ -44,5 +44,5 @@ jobs:
         docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/calkulator_frontend:latest
         docker stop calkulator_frontend || true
         docker rm calkulator_frontend || true
-        docker run -d --name calkulator_frontend -p 80:80 ${{ secrets.DOCKER_HUB_USERNAME }}/angular-app:latest
+        docker run -d --name calkulator_frontend -p 80:80 ${{ secrets.DOCKER_HUB_USERNAME }}/calkulator_frontend:latest
         EOF
