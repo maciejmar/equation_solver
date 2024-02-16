@@ -38,6 +38,7 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/calkulator_frontend:latest
 
+        
     - name: Deploy to OVH VPS
       run: |
         ssh -o StrictHostKeyChecking=no username@${{ secrets.OVH_VPS_IP }} << 'EOF'
