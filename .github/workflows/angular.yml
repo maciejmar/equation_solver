@@ -21,7 +21,8 @@ jobs:
       working-directory: calkulator_frontend
 
     - name: Build
-      run: npm run build -- --prod
+      run:  npm run build -- --configuration=production
+
       working-directory: calkulator_frontend
       
     - name: Log in to Docker Hub
