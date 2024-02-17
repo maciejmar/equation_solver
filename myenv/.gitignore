@@ -1,0 +1,212 @@
+# Django #
+./equation_solver/*.log
+./equation_solver/*.pot
+./equation_solver/*.pyc
+./equation_solver/__pycache__
+./equation_solver/db.sqlite3
+./equation_solver/media
+
+# Backup files # 
+./equation_solver/*.bak 
+
+# If you are using PyCharm # 
+# User-specific stuff
+./equation_solver/.idea/**/workspace.xml
+./equation_solver/.idea/**/tasks.xml
+./equation_solver/.idea/**/usage.statistics.xml
+./equation_solver/.idea/**/dictionaries
+./equation_solver/.idea/**/shelf
+
+# AWS User-specific
+./equation_solver/.idea/**/aws.xml
+
+# Generated files
+./equation_solver/.idea/**/contentModel.xml
+
+# Sensitive or high-churn files
+./equation_solver/.idea/**/dataSources/
+./equation_solver/.idea/**/dataSources.ids
+./equation_solver/.idea/**/dataSources.local.xml
+./equation_solver/.idea/**/sqlDataSources.xml
+./equation_solver/.idea/**/dynamic.xml
+./equation_solver/.idea/**/uiDesigner.xml
+./equation_solver/.idea/**/dbnavigator.xml
+
+# Gradle
+./equation_solver/.idea/**/gradle.xml
+./equation_solver/.idea/**/libraries
+
+# File-based project format
+./equation_solver/*.iws
+
+# IntelliJ
+./equation_solver/out/
+
+# JIRA plugin
+./equation_solver/atlassian-ide-plugin.xml
+
+# Python # 
+./equation_solver/*.py[cod] 
+./equation_solver/*$py.class 
+
+# Distribution / packaging 
+./equation_solver/.Python build/ 
+./equation_solver/develop-eggs/ 
+./equation_solver/dist/ 
+./equation_solver/downloads/ 
+./equation_solver/eggs/ 
+./equation_solver/.eggs/ 
+./equation_solver/lib/ 
+./equation_solver/lib64/ 
+./equation_solver/parts/ 
+./equation_solver/sdist/ 
+./equation_solver/var/ 
+./equation_solver/wheels/ 
+./equation_solver/*.whl
+./equation_solver/*.egg-info/ 
+./equation_solver/.installed.cfg 
+./equation_solver/*.egg 
+./equation_solver/*.manifest 
+./equation_solver/*.spec 
+
+# Installer logs 
+./equation_solver/pip-log.txt 
+./equation_solver/pip-delete-this-directory.txt 
+
+# Unit test / coverage reports 
+./equation_solver/htmlcov/ 
+./equation_solver/.tox/ 
+./equation_solver/.coverage 
+./equation_solver/.coverage.* 
+./equation_solver/.cache 
+./equation_solver/.pytest_cache/ 
+./equation_solver/nosetests.xml 
+./equation_solver/coverage.xml 
+./equation_solver/*.cover 
+./equation_solver/.hypothesis/ 
+
+# Jupyter Notebook 
+./equation_solver/.ipynb_checkpoints 
+
+# pyenv 
+./equation_solver/.python-version 
+
+# celery 
+./equation_solver/celerybeat-schedule.* 
+
+# SageMath parsed files 
+./equation_solver/*.sage.py 
+
+# Environments 
+./equation_solver/.env 
+./equation_solver/.venv 
+./equation_solver/env/ 
+./equation_solver/venv/ 
+./equation_solver/ENV/ 
+./equation_solver/env.bak/ 
+./equation_solver/venv.bak/ 
+
+# mkdocs documentation 
+./equation_solver//site 
+
+# mypy 
+./equation_solver/.mypy_cache/ 
+
+# Sublime Text # 
+./equation_solver/*.tmlanguage.cache 
+./equation_solver/*.tmPreferences.cache 
+./equation_solver/*.stTheme.cache 
+./equation_solver/*.sublime-workspace 
+./equation_solver/*.sublime-project 
+
+# sftp configuration file 
+./equation_solver/sftp-config.json 
+
+# Package control specific files Package 
+./equation_solver/Control.last-run 
+./equation_solver/Control.ca-list 
+./equation_solver/Control.ca-bundle 
+./equation_solver/Control.system-ca-bundle 
+./equation_solver/GitHub.sublime-settings 
+
+# Visual Studio Code # 
+./equation_solver/.vscode/* 
+./equation_solver/!.vscode/settings.json 
+./equation_solver/!.vscode/tasks.json 
+./equation_solver/!.vscode/launch.json 
+./equation_solver/!.vscode/extensions.json 
+./equation_solver/.history
+
+
+
+
+#Angular
+./calculator_frontend/.DS_STORE
+
+./calculator_frontend/dist/
+./calculator_frontend/bazel-out
+./calculator_frontend/integration/bazel/bazel-*
+./calculator_frontend/*.log
+./calculator_frontend/node_modules/
+
+# CircleCI temporary file for cache key computation.
+# See `save_month_to_file` in `.circleci/config.yml`.
+./calculator_frontend/month.txt
+
+# Include when developing application packages.
+./calculator_frontend/pubspec.lock
+./calculator_frontend/.c9
+./calculator_frontend/.idea/
+./calculator_frontend/.devcontainer/*
+./calculator_frontend/!.devcontainer/README.md
+./calculator_frontend/!.devcontainer/recommended-devcontainer.json
+./calculator_frontend/!.devcontainer/recommended-Dockerfile
+./calculator_frontend/.settings/
+./calculator_frontend/.vscode/launch.json
+./calculator_frontend/.vscode/settings.json
+./calculator_frontend/.vscode/tasks.json
+./calculator_frontend/*.swo
+./calculator_frontend/*.swp
+./calculator_frontend/modules/.settings
+./calculator_frontend/modules/.vscode
+./calculator_frontend/.vimrc
+./calculator_frontend/.nvimrc
+
+# Don't check in secret files
+./calculator_frontend/*secret.js
+
+# Ignore npm/yarn debug log
+./calculator_frontend/npm-debug.log
+./calculator_frontend/yarn-error.log
+
+# build-analytics
+./calculator_frontend/.build-analytics
+
+# rollup-test output
+./calculator_frontend/modules/rollup-test/dist/
+
+# User specific bazel settings
+./calculator_frontend/.bazelrc.user
+
+# User specific ng-dev settings
+./calculator_frontend/.ng-dev.user*
+
+./calculator_frontend/.notes.md
+./calculator_frontend/baseline.json
+
+# Ignore .history for the xyz.local-history VSCode extension
+./calculator_frontend/.history
+
+# Husky
+./calculator_frontend/.husky/_
+./calculator_frontend/aio/content/examples/.DS_Store
+
+
+# Ignore cache created with the Angular CLI.
+./calculator_frontend/.angular/
+
+node_modules
+
+dist/
+tmp/
+out-tsc/
