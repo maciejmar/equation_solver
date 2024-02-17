@@ -34,7 +34,7 @@ jobs:
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v2
       with:
-        context: .
+        context: calkulator_frontend
         file: Dockerfile  # Adjust this if your Dockerfile is located elsewhere
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/calkulator_frontend:latest
