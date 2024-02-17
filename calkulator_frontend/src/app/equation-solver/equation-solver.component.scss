@@ -1,0 +1,16 @@
+
+body{
+  background-color: rgb(2, 14, 24);
+}
+.equation-solver-container {
+    font-size:1em;
+  }
+  
+  .equation {
+    display: flex;
+    align-items: center;
+  }
+  
+  .coefficient {
+    margin-right: 8px; 
+  }
