@@ -141,69 +141,69 @@
 
 
 #Angular
-./calculator_frontend/.DS_STORE
+./calkulator_frontend/.DS_STORE
 
-./calculator_frontend/dist/
-./calculator_frontend/bazel-out
-./calculator_frontend/integration/bazel/bazel-*
-./calculator_frontend/*.log
-./calculator_frontend/node_modules/
+./calkulator_frontend/dist/
+./calkulator_frontend/bazel-out
+./calkulator_frontend/integration/bazel/bazel-*
+./calkulator_frontend/*.log
+./calkulator_frontend/node_modules/
 
 # CircleCI temporary file for cache key computation.
 # See `save_month_to_file` in `.circleci/config.yml`.
-./calculator_frontend/month.txt
+./calkulator_frontend/month.txt
 
 # Include when developing application packages.
-./calculator_frontend/pubspec.lock
-./calculator_frontend/.c9
-./calculator_frontend/.idea/
-./calculator_frontend/.devcontainer/*
-./calculator_frontend/!.devcontainer/README.md
-./calculator_frontend/!.devcontainer/recommended-devcontainer.json
-./calculator_frontend/!.devcontainer/recommended-Dockerfile
-./calculator_frontend/.settings/
-./calculator_frontend/.vscode/launch.json
-./calculator_frontend/.vscode/settings.json
-./calculator_frontend/.vscode/tasks.json
-./calculator_frontend/*.swo
-./calculator_frontend/*.swp
-./calculator_frontend/modules/.settings
-./calculator_frontend/modules/.vscode
-./calculator_frontend/.vimrc
-./calculator_frontend/.nvimrc
+./calkulator_frontend/pubspec.lock
+./calkulator_frontend/.c9
+./calkulator_frontend/.idea/
+./calkulator_frontend/.devcontainer/*
+./calkulator_frontend/!.devcontainer/README.md
+./calkulator_frontend/!.devcontainer/recommended-devcontainer.json
+./calkulator_frontend/!.devcontainer/recommended-Dockerfile
+./calkulator_frontend/.settings/
+./calkulator_frontend/.vscode/launch.json
+./calkulator_frontend/.vscode/settings.json
+./calkulator_frontend/.vscode/tasks.json
+./calkulator_frontend/*.swo
+./calkulator_frontend/*.swp
+./calkulator_frontend/modules/.settings
+./calkulator_frontend/modules/.vscode
+./calkulator_frontend/.vimrc
+./calkulator_frontend/.nvimrc
 
 # Don't check in secret files
-./calculator_frontend/*secret.js
+./calkulator_frontend/*secret.js
 
 # Ignore npm/yarn debug log
-./calculator_frontend/npm-debug.log
-./calculator_frontend/yarn-error.log
+./calkulator_frontend/npm-debug.log
+./calkulator_frontend/yarn-error.log
 
 # build-analytics
-./calculator_frontend/.build-analytics
+./calkulator_frontend/.build-analytics
 
 # rollup-test output
-./calculator_frontend/modules/rollup-test/dist/
+./calkulator_frontend/modules/rollup-test/dist/
 
 # User specific bazel settings
-./calculator_frontend/.bazelrc.user
+./calkulator_frontend/.bazelrc.user
 
 # User specific ng-dev settings
-./calculator_frontend/.ng-dev.user*
+./calkulator_frontend/.ng-dev.user*
 
-./calculator_frontend/.notes.md
-./calculator_frontend/baseline.json
+./calkulator_frontend/.notes.md
+./calkulator_frontend/baseline.json
 
 # Ignore .history for the xyz.local-history VSCode extension
-./calculator_frontend/.history
+./calkulator_frontend/.history
 
 # Husky
-./calculator_frontend/.husky/_
-./calculator_frontend/aio/content/examples/.DS_Store
+./calkulator_frontend/.husky/_
+./calkulator_frontend/aio/content/examples/.DS_Store
 
 
 # Ignore cache created with the Angular CLI.
-./calculator_frontend/.angular/
+./calkulator_frontend/.angular/
 
 node_modules
 
