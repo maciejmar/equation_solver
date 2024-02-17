@@ -1,0 +1,104 @@
+
+body{
+  background-color: rgb(2, 14, 24);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input{
+    background-color: rgba(125, 138, 167,0.4);
+}
+
+badge{
+ text-align:  center;
+ align-items: center;
+}
+.bgcell{
+    text-align:  center;
+    align-items: center;
+}
+
+.profile{
+    max-width: 12%;
+    margin-bottom:2%;
+    margin-top:2%;
+}
+
+.forms-container{
+    margin-top:1%;
+    margin-left: 1%;
+    margin-bottom:0;
+    margin-right:0;
+    display:flex;
+    flex-direction: row;
+}
+
+.form-profile{
+
+width: 25%;
+}
+
+.form-matrix{
+width:50%;
+}
+
+.form-ordinates{
+width:20%;
+//justify-content:flex-start;
+}
+
+
+
+.matrix-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2%;
+  }
+  
+  .matrix-cell {
+    margin: 0 1%;
+    width:15%;
+    border-style:solid blue;
+  }
+  
+  .cell-container{
+    display: flex;
+  }
+
+  .ordinates-row{
+   display:flex;
+   flex-direction: column;
+   width:40%;
+  }
+  .ordinates-cell{
+    background-color: rgba(255, 255, 255, 0.3);
+    margin-top: 10%;
+    margin-bottom:10%;
+    padding: 0;
+    
+    
+  }
+  .input-ordinate{
+    background-color: rgba(230, 231, 168, 0.6);
+    width:100%;
+  }
+
+  .formWithButton{
+    display:flex;
+    flex-direction:column;
+    align-items: center;
+    width:100%;
+  }
+  .buttonwidth{
+    width:20%;
+  }
+
+  .error-message{ 
+    margin:3%;
+    color:rgb(155, 8, 8);
+    background-color: chocolate;
+  }

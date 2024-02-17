@@ -1,0 +1,44 @@
+<div class="forms-container">
+    <div class="form-profile">
+        <form  [formGroup]="profileForm" (ngSubmit)="onSubmit1()" class="profile" novalidate >
+            <label name= "degree"></label>
+            <input type="number" formControlName = "degree" name="degree" class ="form-control round" placeholder="degree here">
+            <button class="btn btn-secondary">Enter</button>
+        </form>
+    </div>
+    <div class="form-matrix">
+        <form [formGroup]="matrixForm" (ngSubmit)="submitMatrixForm()" class="rounded">
+            <div class="formWithButton">
+                <div *ngFor="let row of rows; let i = index" class="matrix-row">
+                    <div *ngFor="let col of cols; let j = index" class="matrix-cell">
+                        <div class="cell-container">
+                            <input type="number" [formControlName]="'cell' + i + '_' + j" class="form-control" id="cell" required>
+                            <label for="cell" class="badge bg-secondary bgcell" > x{{j+1}}</label>
+                            <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']" class="error-message">
+                                <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.invalid && (matrixForm.get('cell' + i + '_' + j)?.dirty || matrixForm.get('cell' + i + '_' + j)?.touched)"
+                                     class="alert alert-danger">
+                                </div>
+                                <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['required']">Cell is required.</div>
+                               <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']">Only numbers are allowed!</div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="matrixForm.errors?.['backend']" class="alert alert-dark error-message" role="alert" >
+                    {{ matrixForm.errors?.['backend'] }}
+                </div>
+            
+                <button type="submit" class="btn btn-primary buttonwidth">Submit</button>
+            </div>
+        </form>
+    </div> 
+    <div class="form-ordinates">  
+        <form [formGroup]="ordinatesForm" class="ordinates-row" (ngSubmit) = "submitOrdinatesForm()">
+            <div *ngFor="let row of rows; let i = index" class="form-control rounded ordinates-cell">
+                    <input type ="number" class="rounded input-ordinate" [formControlName]="'ordin'+ i" required/>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
