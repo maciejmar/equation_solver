@@ -3,7 +3,7 @@ name: Deploy Django Application
 on:
   push:
     branches: [master]
-
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
