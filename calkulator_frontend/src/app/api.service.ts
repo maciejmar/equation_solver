@@ -1,16 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from './../enviroments/environment';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  apiUrl = 'http://localhost:8001/calculator/solve/';  // URL of my Django API
+  //apiUrl = 'http://localhost:8001/calculator/solve/';  // URL of my Django API
 
+  apiUrl = environment.apiUrl;
+  apiAnotherUrl = environment.apiAnotherUrl;
+  apiOrdinatesUrl = environment.apiOrdinatesUrl;
   constructor(private http: HttpClient) { }
 
   getSolverData() {
-    return this.http.get<any>(`${this.apiUrl}/calculator/solve/`);
+    return this.http.get<any>(`${this.apiUrl}`);
   }
 
   postMatrixData(matrixData: any) {
