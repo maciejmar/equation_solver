@@ -29,8 +29,8 @@ jobs:
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v2
       with:
-        context: .
-        file: Dockerfile  # Adjust this if your Dockerfile is located elsewhere
+        context: ./equation_solver
+        file: ./equation_solver/Dockerfile  # Adjust this if your Dockerfile is located elsewhere
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/equation_solver:latest
 
