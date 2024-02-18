@@ -35,7 +35,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: calkulator_frontend
-        file: ./calkulator_frontend/Dockerfile  # Adjust this if your Dockerfile is located elsewhere
+        file: ./calkulator_frontend/Dockerfile  
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/calkulator_frontend:latest
 
