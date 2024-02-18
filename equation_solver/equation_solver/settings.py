@@ -29,6 +29,8 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'vps-9f62e310.vps.ovh.net'
+    'vps-9f62e310.vps.ovh.net:8082'
+
 ]
 
 
