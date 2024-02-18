@@ -19,15 +19,15 @@ export class ApiService {
   }
 
   postMatrixData(matrixData: any) {
-    return this.http.post<any>('http://localhost:8001/calculator/equation_solver/', matrixData);
+    return this.http.post<any>( this.apiUrl, matrixData );
   }
 
   postDegreeData(degreeData: any) {
-     return this.http.post<any> (`http://localhost:8001/calculator/another_post/`, degreeData); //(`${this.apiUrl}another_post/`, degreeData);
+     return this.http.post<any> ( this.apiAnotherUrl, degreeData ); //(`${this.apiUrl}another_post/`, degreeData);
   }
 
   postOrdinatesData(ordinatesData: any) {
-    return this.http.post<any> (`http://localhost:8001/calculator/ordinates/`, ordinatesData); //(`${this.apiUrl}ordinates/`, ordinatesData);
+    return this.http.post<any> ( this.apiOrdinatesUrl, ordinatesData ); //(`${this.apiUrl}ordinates/`, ordinatesData);
  }
 
   
