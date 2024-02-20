@@ -33,6 +33,13 @@ jobs:
         file: ./equation_solver/Dockerfile  # Adjust this if your Dockerfile is located elsewhere
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/equation_solver:latest
+        
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.OVH_VPS_IP }} >> ~/.ssh/known_hosts  
 
     - name: Deploy to OVH VPS
       run: |

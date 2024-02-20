@@ -28,8 +28,9 @@ DEBUG = False #turn True by the development
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'vps-9f62e310.vps.ovh.net'
-    'vps-9f62e310.vps.ovh.net:8082'
+    'vps-9f62e310.vps.ovh.net',
+    'vps-9f62e310.vps.ovh.net:8082',
+    "http://vps-9f62e310.vps.ovh.net:8082",
 
 ]
 
