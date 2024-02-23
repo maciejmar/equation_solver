@@ -1,4 +1,5 @@
 import { Component,OnInit } from '@angular/core';
+
 import { FormBuilder, FormGroup, FormArray,  FormControl, AbstractControl,  Validators } from '@angular/forms';
 import { ApiService } from '../api.service';
 @Component({
@@ -15,6 +16,7 @@ export class MatrixComponent implements OnInit {
   matrixForm!: FormGroup;
   rows = Array(4);
   cols = Array(4);
+  results  = Array(4);
 
  // ordinatesForm!: FormGroup;
   
@@ -105,7 +107,11 @@ export class MatrixComponent implements OnInit {
         const ordinatesData = this.ordinatesForm.value;
         console.log(this.ordinatesForm.value);
         this.apiService.postOrdinatesData(ordinatesData).subscribe({
-           next: response => console.log('ResponseOrdinates:', response.solution),
+           next: response => { 
+                               console.log('ResponseOrdinates:', response.solution);
+                               this.results.push(response);
+                            },
+                           
            error: error => console.error('Error:', error)
         })
     }

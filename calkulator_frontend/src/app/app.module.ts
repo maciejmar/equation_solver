@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from './api.service';
 import { MatrixComponent } from './matrix/matrix.component';
 import { NavComponent } from './nav/nav.component'; // Your API service
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -22,7 +23,7 @@ import { NavComponent } from './nav/nav.component'; // Your API service
     AppRoutingModule,
     ReactiveFormsModule, 
     HttpClientModule,
-    
+    FormsModule,
     
   ],
   providers: [],
