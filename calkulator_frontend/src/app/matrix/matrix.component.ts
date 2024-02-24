@@ -59,8 +59,8 @@ export class MatrixComponent implements OnInit {
       for (let j = 0; j < 4; j++) {
           const controlName = `cell${i}_${j}`;
           this.matrixForm.addControl(controlName, new FormControl('', [
-              Validators.required
-             // Validators.required//pattern('/^-?\d+(\.\d+)?$/)$/') // Only numeric values alowed 
+              Validators.required,
+              Validators.pattern('/^-?\d+(\.\d+)?$/)$/') // Only numeric values alowed 
           ]));
       }
   }
