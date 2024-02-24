@@ -48,7 +48,7 @@
         The solution is: 
         <span *ngFor="let result of results; let i = index">
             <div class="solucionCell">
-                    x{{i}}={{result| number:'1.0-4'}}{{i < results.length - 1 ? ', ' : ''}}
+                    x{{i}}={{result| number:'1.0-4'}}{{i < results.length - 1 ? '' : ''}}
             </div>        
         </span> 
     </div>
