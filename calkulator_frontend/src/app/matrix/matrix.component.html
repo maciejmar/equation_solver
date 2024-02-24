@@ -47,7 +47,7 @@
     <div class="results" name="response">
         The solution is: 
         <span *ngFor="let result of results; let i = index">
-            x{{i}}={{result}}{{i < results.length - 1 ? ', ' : ''}}
+            x{{i}}={{result| number:'1.0-4'}}{{i < results.length - 1 ? ', ' : ''}}
         </span> 
     </div>
 </div>
