@@ -43,8 +43,11 @@
     </div>
     
 </div>
-<div class="contaier">
-    <div class="resutls" name= "response" [ngModel] ="results">
-        [x,y,z,t] = {{this.results}} - this is solution 
+<div class="container">
+    <div class="results" name="response">
+        [x,y,z,t] = 
+        <span *ngFor="let result of results; let i = index">
+            {{result}}{{i < results.length - 1 ? ', ' : ''}}
+        </span> - this is solution 
     </div>
 </div>
