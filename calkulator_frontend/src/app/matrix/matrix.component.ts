@@ -109,7 +109,7 @@ export class MatrixComponent implements OnInit {
         this.apiService.postOrdinatesData(ordinatesData).subscribe({
            next: response => { 
                                console.log('ResponseOrdinates:', response.solution);
-                               this.results.push(response);
+                               this.results = [...response.solution];
                             },
                            
            error: error => console.error('Error:', error)
