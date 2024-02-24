@@ -45,9 +45,9 @@
 </div>
 <div class="badge badge-light container">
     <div class="results" name="response">
-        [x,y,z,t] = 
+        The solution is: 
         <span *ngFor="let result of results; let i = index">
-            {{result}}{{i < results.length - 1 ? ', ' : ''}}
-        </span> - this is solution 
+            x{{i}}={{result}}{{i < results.length - 1 ? ', ' : ''}}
+        </span> 
     </div>
 </div>
