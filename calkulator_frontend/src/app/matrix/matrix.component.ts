@@ -1,6 +1,6 @@
 import { Component,OnInit } from '@angular/core';
 
-import { FormBuilder, FormGroup, FormArray,  FormControl, AbstractControl,  Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray,  FormControl, AbstractControl,  Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { ApiService } from '../api.service';
 @Component({
   selector: 'app-matrix',
@@ -115,7 +115,26 @@ export class MatrixComponent implements OnInit {
            error: error => console.error('Error:', error)
         })
     }
-       
+    
+    safeEvaluate(expression: string): number | null {
+      try {
+        // Placeholder for safe evaluation logic
+        // e.g., using math.js: return math.evaluate(expression);
+        return eval(expression); // Note: Using eval() as a placeholder, not recommended for production
+      } catch {
+        return null; // Indicate failure to evaluate
+      }
+    }
+
+    expressionValidator(): ValidatorFn {
+      return (control: AbstractControl): ValidationErrors | null => {
+        const result = this.safeEvaluate(control.value); // Use the safe evaluation function
+        if (result === null || isNaN(result)) {
+          return { 'expressionInvalid': true };
+        }
+        return null; // If the expression is valid and evaluates to a number
+      };
+    }
          
 
 }
