@@ -22,6 +22,7 @@
                             <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']" class="error-message">
                                 <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.invalid && (matrixForm.get('cell' + i + '_' + j)?.dirty || matrixForm.get('cell' + i + '_' + j)?.touched)"
                                      class="alert alert-danger">
+                                        Numbers only!
                                 </div>
                                 <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.touched && matrixForm.get('cell' + i + '_' + j)?.errors?.['expressionInvalid']"
                                       class="alert alert-danger">
