@@ -12,13 +12,21 @@
                 <div *ngFor="let row of rows; let i = index" class="matrix-row">
                     <div *ngFor="let col of cols; let j = index" class="matrix-cell">
                         <div class="cell-container">
-                            <input type="number" [formControlName]="'cell' + i + '_' + j" class="form-control" id="cell" required>
+                            <input type="number" 
+                                  [formControlName]="'cell' + i + '_' + j" 
+                                  class="form-control"
+                                  id="cell"
+                                  (blur)="onFieldBlur('cell' + i + '_' + j)"
+                                  required>
                             <label for="cell" class="badge bg-secondary bgcell" > x{{j+1}}</label>
                             <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']" class="error-message">
                                 <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.invalid && (matrixForm.get('cell' + i + '_' + j)?.dirty || matrixForm.get('cell' + i + '_' + j)?.touched)"
                                      class="alert alert-danger">
                                 </div>
-                                <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['expressionInvalid']">Numbers only!</div>
+                                <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.touched && matrixForm.get('cell' + i + '_' + j)?.errors?.['expressionInvalid']"
+                                      class="alert alert-danger">
+                                           Numbers only!
+                                </div>
                                 <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['required']">Cell is required.</div>
                                <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']">Only numbers are allowed!</div>
                             </div>
