@@ -141,6 +141,7 @@ export class MatrixComponent implements OnInit {
     onFieldBlur(controlName: string): void {
       const control = this.matrixForm.get(controlName);
       if (control && !control.valid) {
+        
         // The control is invalid after the user leaves the field
         // Here, you can implement any logic you need to signal the error to the user
         // For example, you could set a flag to show an error message next to the field
