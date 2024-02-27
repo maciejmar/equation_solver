@@ -46,7 +46,7 @@
             <div *ngFor="let row of rows; let i = index" class="form-control rounded ordinates-cell">
                     <input type ="number" class="rounded input-ordinate" [formControlName]="'ordin'+ i" required/>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" [disabled]="ordinatesForm.invalid">Submit</button>
         </form>
     </div>
     
