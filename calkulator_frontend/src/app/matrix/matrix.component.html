@@ -37,7 +37,7 @@
                     {{ matrixForm.errors?.['backend'] }}
                 </div>
             
-                <button type="submit" class="btn btn-primary buttonwidth">Submit</button>
+                <button [disabled]="matrixForm.valid" type="submit" class="btn btn-primary buttonwidth">Submit</button>
             </div>
         </form>
     </div> 
