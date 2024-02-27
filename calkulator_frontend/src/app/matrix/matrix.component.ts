@@ -33,11 +33,6 @@ export class MatrixComponent implements OnInit {
  })
 
 
-
-  
-
-
-
   constructor(private fb: FormBuilder, private fbuilder:FormBuilder,  private formb: FormBuilder, private formbOrdinates: FormBuilder,
      private apiService: ApiService) {
     
@@ -60,7 +55,8 @@ export class MatrixComponent implements OnInit {
           const controlName = `cell${i}_${j}`;
           this.matrixForm.addControl(controlName, new FormControl('', [
               Validators.required,
-              Validators.pattern(/^-?\d+(\.\d+)?$/) // Only numeric values alowed 
+              Validators.pattern(/^-?\d+(\.\d+)?$/),// Only numeric values alowed 
+              this.expressionValidator() 
           ]));
       }
   }
@@ -84,7 +80,13 @@ export class MatrixComponent implements OnInit {
     }
 
     submitMatrixForm():void {
-      
+      if (this.matrixForm.valid) {
+        // Proceed with submission
+      } else {
+        // Handle invalid form, e.g., by marking all fields as touched to show errors
+        this.matrixForm.markAllAsTouched();
+        console.log('Invalid matrix');
+      }
       const matrixData = this.matrixForm.value;
       console.log(this.matrixForm.value);
       if (this.matrixForm.valid) {
