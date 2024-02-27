@@ -24,9 +24,9 @@ export class MatrixComponent implements OnInit {
     degree: [''],
   });
 
-  matrixform: FormGroup = this.formb.group({
-    row: this.formb.array([])
-});
+//   matrixform: FormGroup = this.formb.group({
+//     row: this.formb.array([])
+// });
 
  ordinatesForm: FormGroup = this.formbOrdinates.group({
   row: this.formbOrdinates.array([])
