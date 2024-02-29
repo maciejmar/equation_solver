@@ -18,4 +18,18 @@ def equation_result(coefficients, ordinates):
     except np.linalg.LinAlgError as e:
         # Handle errors (e.g., singular matrix)
         solutions = str(e)
+    #check the solution
+    
+    # Check the solution by computing A * solution
+    check_solution = np.dot(coefficients, solutions)
+
+    # Print the solution
+    print("Solution:", solutions)
+
+    # Verify the solution against the original constants vector b
+    # Using np.allclose() to account for possible floating-point arithmetic issues
+    if np.allclose(check_solution, ordinates):
+        print("The solution is correct. A * solution closely matches b.")
+    else:
+        print("There's a discrepancy in the solution.")
     return solutions
