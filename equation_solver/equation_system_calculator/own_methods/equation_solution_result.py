@@ -25,7 +25,6 @@ def equation_result(coefficients, ordinates):
 
     # Print the solution
     print("Solution:", solutions)
-
     # Verify the solution against the original constants vector b
     # Using np.allclose() to account for possible floating-point arithmetic issues
     if np.allclose(check_solution, ordinates):
