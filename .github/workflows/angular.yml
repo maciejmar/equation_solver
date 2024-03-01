@@ -49,6 +49,7 @@ jobs:
     - name: Deploy to OVH VPS
       run: |
         ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.OVH_VPS_IP }} << 'EOF'
+        docker image prune -af
         docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/calkulator_frontend:latest
         docker stop calkulator_frontend || true
         docker rm calkulator_frontend || true
