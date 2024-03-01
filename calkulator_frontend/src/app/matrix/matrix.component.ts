@@ -14,9 +14,9 @@ export class MatrixComponent implements OnInit {
   degree:number=0; 
   
   matrixForm!: FormGroup;
-  rows = Array(4);
-  cols = Array(4);
-  results  = Array(4);
+  rows = Array(1);
+  cols = Array(1);
+  results  = Array(1);
 
  // ordinatesForm!: FormGroup;
   
@@ -50,8 +50,8 @@ export class MatrixComponent implements OnInit {
 
 
     this.matrixForm = this.formb.group({});
-    for (let i = 0; i < 4; i++) {
-      for (let j = 0; j < 4; j++) {
+    for (let i = 0; i < this.degree; i++) {
+      for (let j = 0; j < this.degree; j++) {
           const controlName = `cell${i}_${j}`;
           this.matrixForm.addControl(controlName, new FormControl('', [
               Validators.required,
