@@ -21,7 +21,7 @@
                                   [formControlName]="'cell' + i + '_' + j" 
                                   class="form-control"
                                   id="cell"
-                                  (blur)="onFieldBlur('cell' + i + '_' + j)"
+                                  
                                   required>
                             <label for="cell" class="badge bg-secondary bgcell" > x{{j+1}}</label>
                             <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']" class="error-message">
