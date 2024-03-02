@@ -2,12 +2,7 @@
     <div class="form-profile">
         <form  [formGroup]="profileForm" (ngSubmit)="onSubmit1()" class="profile" novalidate >
             <label name= "degree"></label>
-            <input type="number" 
-                   formControlName.model = "degree" 
-                   name="degree"  
-                   class ="form-control round" 
-                   placeholder="degree here"
-            >
+            <input type="number" formControlName = "degree" name="degree" class ="form-control round" placeholder="degree here">
             <button class="btn btn-secondary">Enter</button>
         </form>
     </div>
@@ -21,7 +16,7 @@
                                   [formControlName]="'cell' + i + '_' + j" 
                                   class="form-control"
                                   id="cell"
-                                  
+                                  (blur)="onFieldBlur('cell' + i + '_' + j)"
                                   required>
                             <label for="cell" class="badge bg-secondary bgcell" > x{{j+1}}</label>
                             <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']" class="error-message">
