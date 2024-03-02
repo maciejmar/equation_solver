@@ -7,6 +7,7 @@ import numpy as np
 from ..own_methods.equation_solution_result import equation_result
 from django.core.cache import cache
 from numpy.linalg import LinAlgError
+from django.core.cache import cache
 
 # def post(self, request, format=None):
 #         data = request.data
@@ -28,7 +29,8 @@ class EquationSolver(APIView):
       print('Received matrix data:', data)
 
       # Reconstruct the matrix from the cell values
-      size = 4  # Assuming a 4x4 matrix
+      degree = cache.get('degree', default=4)  # Use a default value if not set
+      size = int(degree)  # Ensure it's an integer
       matrix = np.zeros((size, size))
       for i in range(size):
         for j in range(size):
