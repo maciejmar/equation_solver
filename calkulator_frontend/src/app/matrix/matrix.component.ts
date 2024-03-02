@@ -11,7 +11,7 @@ import { ApiService } from '../api.service';
 export class MatrixComponent implements OnInit {
  
   degreeForm!: FormGroup;
-  degree:number=0; 
+  degree:number=4; 
   
   matrixForm!: FormGroup;
   rows = Array(4);
@@ -38,7 +38,7 @@ export class MatrixComponent implements OnInit {
     
   }
 
-  n:number = 0  
+   
   ngOnInit(): void {
     this.degreeForm = this.fb.group({
       degree: [this.degree, Validators.required]
@@ -50,8 +50,8 @@ export class MatrixComponent implements OnInit {
 
 
     this.matrixForm = this.formb.group({});
-    for (let i = 0; i < 4; i++) {
-      for (let j = 0; j < 4; j++) {
+    for (let i = 0; i < this.degree; i++) {
+      for (let j = 0; j < this.degree; j++) {
           const controlName = `cell${i}_${j}`;
           this.matrixForm.addControl(controlName, new FormControl('', [
               Validators.required,
@@ -62,21 +62,55 @@ export class MatrixComponent implements OnInit {
   }
 
     this.ordinatesForm = this.formb.group({});
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < this.degree; i++) {
       {
         this.ordinatesForm.addControl('ordin' + i , new FormControl(''));
       }
     }
 
   }
+    
+  private updateMatrixSize(degree: number): void {
+    this.rows = Array.from({length: degree}, (_, i) => i);
+    this.cols = Array.from({length: degree}, (_, i) => i);
   
+    // Reset and rebuild the matrix form based on new degree
+    this.matrixForm = this.formb.group({});
+    for (let i = 0; i < degree; i++) {
+      for (let j = 0; j < degree; j++) {
+        this.matrixForm.addControl(`cell${i}_${j}`, new FormControl('', [
+          Validators.required,
+          Validators.pattern(/^-?\d+(\.\d+)?$/),
+          this.expressionValidator()
+        ]));
+      }
+    }
+  }
+  
+  private updateOrdinatesSize(degree: number): void {
+    // Reset and rebuild the ordinates form based on new degree
+    this.ordinatesForm = this.formb.group({});
+    for (let i = 0; i < degree; i++) {
+      this.ordinatesForm.addControl(`ordin${i}`, new FormControl('', Validators.required));
+    }
+  }
+
+    // onSubmit1(): void {
+    //   const formData = this.profileForm.value;
+    //   this.apiService.postDegreeData(formData).subscribe({
+    //     next:response => console.log('ResponseDegree:', response),
+    //     error: error => console.error('Error:', error)
+    //   });
+    // }
 
     onSubmit1(): void {
       const formData = this.profileForm.value;
-      this.apiService.postDegreeData(formData).subscribe({
-        next:response => console.log('ResponseDegree:', response),
-        error: error => console.error('Error:', error)
-      });
+      const newDegree = formData.degree;
+      if (newDegree !== undefined) {
+        this.degree = newDegree;
+        this.updateMatrixSize(newDegree);
+        this.updateOrdinatesSize(newDegree);
+      }
     }
 
     submitMatrixForm():void {
