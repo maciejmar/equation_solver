@@ -105,7 +105,7 @@ export class MatrixComponent implements OnInit {
 
     onSubmit1(): void {
       const formData = this.profileForm.value;
-      const newDegree = formData.degree;
+      const newDegree = formData !== null ? +formData : 0;
       if (newDegree !== undefined) {
         this.degree = newDegree;
         this.updateMatrixSize(newDegree);
