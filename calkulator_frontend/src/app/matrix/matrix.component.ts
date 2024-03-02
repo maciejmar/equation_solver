@@ -14,8 +14,8 @@ export class MatrixComponent implements OnInit {
   degree:number=0; 
   profileForm!: FormGroup;
   matrixForm!: FormGroup;
-  rows = [];
-  cols = [];
+  rows: number[] = [];
+  cols: number[] = [];
   results  = [];
 
  // ordinatesForm!: FormGroup;
@@ -69,19 +69,32 @@ export class MatrixComponent implements OnInit {
     //   degree: ['']
     // });
 
-    updateMatrixAndOrdinatesForms(degree: number) {
-      this.matrixForm = this.fb.group({});
-      this.ordinatesForm = this.fb.group({});
-  
+    updateMatrixAndOrdinatesForms(degree: number): void {
+      // Reset the forms or remove existing controls
+      this.matrixForm = this.formb.group({});
+      this.ordinatesForm = this.formb.group({});
+    
+      // Dynamically add new controls for the matrix
       for (let i = 0; i < degree; i++) {
         for (let j = 0; j < degree; j++) {
           const controlName = `cell${i}_${j}`;
-          this.matrixForm.addControl(controlName, new FormControl('', Validators.required));
+          this.matrixForm.addControl(controlName, new FormControl('', [
+            Validators.required,
+            Validators.pattern(/^-?\d+(\.\d+)?$/), // Only numeric values allowed
+          ]));
         }
-  
-        this.ordinatesForm.addControl('ordin' + i, new FormControl('', Validators.required));
       }
+    
+      // Dynamically add new controls for the coefficients
+      for (let i = 0; i < degree; i++) {
+        this.ordinatesForm.addControl('ordin' + i , new FormControl('', Validators.required));
+      }
+    
+      // Update rows and cols to reflect the new degree
+      this.rows = Array(degree).fill(0).map((x,i)=>i);
+      this.cols = Array(degree).fill(0).map((x,i)=>i);
     }
+    
 
       onSubmit1(): void {
         // Handle form submission for degree
