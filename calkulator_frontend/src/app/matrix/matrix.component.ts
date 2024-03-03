@@ -11,12 +11,15 @@ import { ApiService } from '../api.service';
 export class MatrixComponent implements OnInit {
  
   degreeForm!: FormGroup;
-  degree:number=4; 
+  degree:number = 4; 
   
   matrixForm!: FormGroup;
-  rows = Array(4);
-  cols = Array(4);
-  results  = Array(4);
+  // rows = Array(4);
+  // cols = Array(4);
+  // results  = Array(4);
+  rows = []
+  cols = []
+  results = []
 
  // ordinatesForm!: FormGroup;
   
