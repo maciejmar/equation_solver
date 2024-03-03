@@ -46,7 +46,7 @@ class EquationSolver(APIView):
            det = np.linalg.det(matrix)
            if np.isclose(det, 0):
              print('this matrix is singular')  
-             return Response({'error': 'Matrix is singular, cannot proceed'}, status=400)
+             return Response({'error': 'Matrix is singular, cannot proceed, size='+size}, status=400)
       except LinAlgError as e:
             return Response({'error is now in except matrixSolver': str(e)}, status=400)  
         
