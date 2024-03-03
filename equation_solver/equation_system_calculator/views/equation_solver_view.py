@@ -46,7 +46,7 @@ class EquationSolver(APIView):
            det = np.linalg.det(matrix)
            if np.isclose(det, 0):
              print('this matrix is singular')  
-             return Response({'error': 'Matrix is singular, cannot proceed '+size}, status=400)
+             return Response({'error': 'Matrix is singular, cannot proceed'}, status=400)
       except LinAlgError as e:
             return Response({'error is now in except matrixSolver': str(e)}, status=400)  
         
@@ -57,8 +57,8 @@ class EquationSolver(APIView):
 
       m = cache.get('matrix_data')
       print('m in get of cache is:', m)
-      return Response({'result': 'we are in equation_solver'})
-
+      return Response({'result': f"we are in equation_solver {degree}, matrix_data: {str(m)}"})
+      
         
 class MatrixSolver(APIView):
     def post(self, request, format=None):
