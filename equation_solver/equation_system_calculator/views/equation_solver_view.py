@@ -29,8 +29,8 @@ class EquationSolver(APIView):
       print('Received matrix data:', data)
 
       # Reconstruct the matrix from the cell values
-      degree = cache.get('degree', default=4)  # Use a default value if not set
-      size = int(degree)  # Ensure it's an integer
+      size = reconstruct_matrix(data)
+      print ('size of matrix = ', size )
       matrix = np.zeros((size, size))
       for i in range(size):
         for j in range(size):
@@ -57,7 +57,7 @@ class EquationSolver(APIView):
 
       m = cache.get('matrix_data')
       print('m in get of cache is:', m)
-      return Response({'result': f"we are in equation_solver {degree}, matrix_data: {str(m)}"})
+      return Response({'result': "we are in equation_solver"})
       
         
 class MatrixSolver(APIView):
@@ -83,6 +83,8 @@ class OrdinatesSolver(APIView):
         print('Received ordinates data:', data)
         ordinates = np.array(data.get('ordinates'))
         matrix = cache.get('matrix_data')  # Retrieve matrix data
+        matrix = reconstruct_vector(ordinates)
+        print ('odinates vector size is ', matrix)
         print('********************************')
         # Process ordinates data
         if matrix is not None:
@@ -90,7 +92,7 @@ class OrdinatesSolver(APIView):
             print ('I solved the equation system ->',solution)
             return Response({'solution': solution})
         else:
-            return Response({'error': 'Matrix data not found'}, status=400)
+            return Response({'error': 'Ordinates data not found'}, status=400)
        
         
      
@@ -103,3 +105,11 @@ def solve(request):
 def solve_equations(request):
     # Your logic for 'solve_equations'
     return HttpResponse("Response from solve_equations")
+
+def reconstruct_matrix(data):
+    size = int(np.sqrt(len(data)))
+    matrix = np.array(data).reshape(size, size)
+    return matrix
+def reconstruct_vector(data):
+    vector = int((len(data)))
+    return vector
