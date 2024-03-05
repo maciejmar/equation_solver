@@ -171,6 +171,7 @@
 ./calkulator_frontend/modules/.vscode
 ./calkulator_frontend/.vimrc
 ./calkulator_frontend/.nvimrc
+./calkulator_frontend/.angular/cache/*
 
 # Don't check in secret files
 ./calkulator_frontend/*secret.js
