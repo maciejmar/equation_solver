@@ -11,12 +11,12 @@ import { ApiService } from '../api.service';
 export class MatrixComponent implements OnInit {
  
   degreeForm!: FormGroup;
-  degree:number=4; 
+  degree!:number; 
   
   matrixForm!: FormGroup;
-  rows = Array(4);
-  cols = Array(4);
-  results  = Array(4);
+  rows:number[] = [];
+  cols:number[] = [];
+  results:number[]  = []
 
  // ordinatesForm!: FormGroup;
   
@@ -41,7 +41,9 @@ export class MatrixComponent implements OnInit {
    
   ngOnInit(): void {
     this.degreeForm = this.fb.group({
-      degree: [this.degree, Validators.required]
+      degree: [this.degree, 
+               Validators.required,
+               this.degreeValidator()]
     });
 
     this.profileForm = this.fb.group({
@@ -107,7 +109,7 @@ export class MatrixComponent implements OnInit {
       // Extract the degree directly from the form control.
       const degreeControl = this.profileForm.get('degree');
       const newDegree = degreeControl ? +degreeControl.value! : 0;
-      if (newDegree > 0) {
+      if (newDegree > 1 && newDegree < 7)  {
         this.degree = newDegree;
         this.updateMatrixSize(newDegree);
         this.updateOrdinatesSize(newDegree);
@@ -171,6 +173,16 @@ export class MatrixComponent implements OnInit {
         }
         return null; // If the expression is valid and evaluates to a number
       };
+    }
+
+    degreeValidator(): ValidatorFn {
+      return (control: AbstractControl): ValidationErrors | null => {
+        const result = control.value;
+        if (result < 2 || result > 7 ){
+          return {'expressionInvalid' : true}
+        }
+        return null;
+      }
     }
 
     onFieldBlur(controlName: string): void {

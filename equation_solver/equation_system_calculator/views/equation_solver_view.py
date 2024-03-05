@@ -29,8 +29,9 @@ class EquationSolver(APIView):
       print('Received matrix data:', data)
 
       # Reconstruct the matrix from the cell values
-      size = reconstruct_matrix(data)
-      print ('size of matrix = ', size )
+      
+      size = int(reconstruct_matrix(data))
+      print('matrix after reconstruciton size ', size)  
       matrix = np.zeros((size, size))
       for i in range(size):
         for j in range(size):
@@ -72,7 +73,8 @@ class MatrixSolver(APIView):
              return Response({'error': 'Matrix is singular, cannot proceed'}, status=400)
         except LinAlgError as e:
             return Response({'error is now in except matrixSolver': str(e)}, status=400)  
-        
+        print ('matrix before cache ')
+        print(matrix)
         cache.set('matrix_data', matrix, timeout=300)  # Store matrix data for 5 minutes
         print('-------------------------------- matrix =' )
         return Response({'result': 'we are in equation_solver'})
@@ -107,9 +109,11 @@ def solve_equations(request):
     return HttpResponse("Response from solve_equations")
 
 def reconstruct_matrix(data):
-    size = int(np.sqrt(len(data)))
-    matrix = np.array(data).reshape(size, size)
-    return matrix
+    lenght = len(data)
+    matrixSize = np.sqrt(lenght)
+    print ('matrixSize is  ', int(matrixSize))
+    return matrixSize
 def reconstruct_vector(data):
-    vector = int((len(data)))
-    return vector
+    vector =len(data)
+    print ('vector size is', int(vector) ) 
+    return int(vector)
