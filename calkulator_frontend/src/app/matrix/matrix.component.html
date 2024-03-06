@@ -10,7 +10,7 @@
             <button [disabled]="profileForm.invalid" class="btn btn-secondary">Enter</button>
         </form>
     </div>
-    <div class="form-matrix">
+    <div *ngIf="profileForm.value && profileForm.dirty" class="form-matrix">
         <form [formGroup]="matrixForm" (ngSubmit)="submitMatrixForm()">
             <div class="formWithButton">
                 <div *ngFor="let row of rows; let i = index" class="matrix-row">
@@ -33,15 +33,15 @@
                                 <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['required']">Cell is required.</div>
                                <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']">Only numbers are allowed!</div>
                             </div>
-                        <span *ngIf="j < degree-1 " style="color:rgb(197, 21, 197);font-size:1.5em">+</span>
+                        <span *ngIf="j < degree-1 " style="color:rgb(224, 149, 224);font-size:1.5em">+</span>
                         </div>
-                    </div><span style="color:aliceblue;font-size:1.5em">=</span>
+                    </div><span style="color:rgb(224, 149, 224);font-size:1.5em">=</span>
                 </div>
                 <div *ngIf="matrixForm.errors?.['backend']" class="alert alert-dark error-message" role="alert" >
                     {{ matrixForm.errors?.['backend'] }}
                 </div>
             
-                <button [disabled]="matrixForm.invalid" type="submit" class="btn btn-primary buttonwidth buttonsMargin">Submit</button>
+                <button *ngIf="matrixForm.dirty && matrixForm.valid" [disabled]="matrixForm.invalid || !this.okToCompleteMatrixForm" type="submit" class="btn btn-primary buttonwidth buttonsMargin">Submit</button>
             </div>
         </form>
         <div class="formWithButton rowContentStart">  <!--form-ordinates-->
@@ -49,17 +49,22 @@
                 <div *ngFor="let row of rows; let i = index" class="matrix-row ordinatesButton"> <!--form-control rounded ordinates-cell-->
                         <input type ="number" class="form-control" style="width:40%"  [formControlName]="'ordin'+ i" required/><!--rounded input-ordinate-->
                 </div>
-                <button type="submit" class="btn btn-primary buttonsMargin" [disabled]="ordinatesForm.invalid">Submit</button>
+                <button *ngIf="ordinatesForm.dirty && ordinatesForm.valid && !okToCompleteMatrixForm" 
+                        type="submit" 
+                        class="btn btn-primary buttonsMargin" 
+                        [disabled]="!this.ordinatesForm.valid"
+                >Submit</button>
             </form>
         </div>
     </div>
     
 </div>
-<div *ngIf="ordinatesForm.touched" class="badge badge-light container">
+<div *ngIf="ordinatesForm.dirty && ordinatesForm.valid && 
+            matrixForm.dirty && matrixForm.valid"   class="badge badge-light container">
     <div class="results" name="response">
         The solution is: 
         <span *ngFor="let result of results; let i = index">
-            <div class="solucionCell">
+            <div class="solucionCell cellLeft">
                     x{{i}}={{result| number:'1.0-4'}}{{i < results.length - 1 ? '' : ''}}
             </div>        
         </span> 

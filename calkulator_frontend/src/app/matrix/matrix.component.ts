@@ -18,6 +18,8 @@ export class MatrixComponent implements OnInit {
   rows:number[] = [];
   cols:number[] = [];
   results:number[]  = []
+  okToCompleteOrdinatesForm:boolean = false;
+  okToCompleteMatrixForm:boolean = true;
 
  // ordinatesForm!: FormGroup;
   
@@ -72,6 +74,11 @@ export class MatrixComponent implements OnInit {
       }
     }
 
+    this.matrixForm.valueChanges.subscribe(() => {  
+      //if(this.okToCompleteMatrixForm && !this.okToCompleteOrdinatesForm)
+        this.okToCompleteOrdinatesForm = false;
+    });
+
   }
     
   private updateMatrixSize(degree: number): void {
@@ -111,7 +118,7 @@ export class MatrixComponent implements OnInit {
       // Extract the degree directly from the form control.
       const degreeControl = this.profileForm.get('degree');
       const newDegree = degreeControl ? +degreeControl.value! : 0;
-      if (newDegree > this.minSize && newDegree <= this.maxSize)  {
+      if (newDegree >= this.minSize && newDegree <= this.maxSize)  {
         this.degree = newDegree;
         this.updateMatrixSize(newDegree);
         this.updateOrdinatesSize(newDegree);
@@ -129,6 +136,9 @@ export class MatrixComponent implements OnInit {
       const matrixData = this.matrixForm.value;
       console.log(this.matrixForm.value);
       if (this.matrixForm.valid) {
+        this.matrixForm.disable();
+        this.okToCompleteOrdinatesForm = true;
+        this.okToCompleteMatrixForm = false;
         // Process the valid form data
         this.apiService.postMatrixData(matrixData).subscribe({
           next: response => console.log('ResponseMatrix:', response),
@@ -146,6 +156,11 @@ export class MatrixComponent implements OnInit {
 
     submitOrdinatesForm():void {
         const ordinatesData = this.ordinatesForm.value;
+        if (this.ordinatesForm.valid && this.okToCompleteOrdinatesForm){
+          this.matrixForm.enable();
+          this.okToCompleteOrdinatesForm = false;
+          this.okToCompleteMatrixForm = true;
+        }
         console.log(this.ordinatesForm.value);
         this.apiService.postOrdinatesData(ordinatesData).subscribe({
            next: response => { 
