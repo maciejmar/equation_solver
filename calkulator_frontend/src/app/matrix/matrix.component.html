@@ -4,8 +4,8 @@
             <label name= "degree"></label>
             <input type="number" formControlName = "degree" name="degree" class ="form-control round" placeholder="degree here">
             <div *ngIf="profileForm?.touched && profileForm?.errors?.['expressionInvalid']"
-            class="alert alert-danger">
-                 degree must be an integer between 2 and 7
+                  class="alert alert-danger">
+                         degree must be an integer between 2 and 7
             </div>
             <button [disabled]="profileForm.invalid" class="btn btn-secondary">Enter</button>
         </form>
