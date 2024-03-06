@@ -11,7 +11,7 @@
         </form>
     </div>
     <div class="form-matrix">
-        <form [formGroup]="matrixForm" (ngSubmit)="submitMatrixForm()" class="rounded">
+        <form [formGroup]="matrixForm" (ngSubmit)="submitMatrixForm()">
             <div class="formWithButton">
                 <div *ngFor="let row of rows; let i = index" class="matrix-row">
                     <div *ngFor="let col of cols; let j = index" class="matrix-cell">
@@ -35,27 +35,27 @@
                             </div>
                            
                         </div>
-                    </div>
+                    </div>=
                 </div>
                 <div *ngIf="matrixForm.errors?.['backend']" class="alert alert-dark error-message" role="alert" >
                     {{ matrixForm.errors?.['backend'] }}
                 </div>
             
-                <button [disabled]="matrixForm.invalid" type="submit" class="btn btn-primary buttonwidth">Submit</button>
+                <button [disabled]="matrixForm.invalid" type="submit" class="btn btn-primary buttonwidth buttonsMargin">Submit</button>
             </div>
         </form>
-    </div> 
-    <div class="form-ordinates">  
-        <form [formGroup]="ordinatesForm" class="ordinates-row" (ngSubmit) = "submitOrdinatesForm()">
-            <div *ngFor="let row of rows; let i = index" class="form-control rounded ordinates-cell">
-                    <input type ="number" class="rounded input-ordinate" [formControlName]="'ordin'+ i" required/>
-            </div>
-            <button type="submit" class="btn btn-primary" [disabled]="ordinatesForm.invalid">Submit</button>
-        </form>
+        <div class="formWithButton rowContentStart">  <!--form-ordinates-->
+            <form [formGroup]="ordinatesForm"  (ngSubmit) = "submitOrdinatesForm()">  <!--ordinates-row-->
+                <div *ngFor="let row of rows; let i = index" class="matrix-row ordinatesButton"> <!--form-control rounded ordinates-cell-->
+                        <input type ="number" class="form-control" style="width:40%"  [formControlName]="'ordin'+ i" required/><!--rounded input-ordinate-->
+                </div>
+                <button type="submit" class="btn btn-primary buttonsMargin" [disabled]="ordinatesForm.invalid">Submit</button>
+            </form>
+        </div>
     </div>
     
 </div>
-<div class="badge badge-light container">
+<div class="badge badge-light container" [hidden]="!ordinatesForm.valid">
     <div class="results" name="response">
         The solution is: 
         <span *ngFor="let result of results; let i = index">

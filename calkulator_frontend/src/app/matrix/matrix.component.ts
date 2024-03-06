@@ -40,6 +40,7 @@ export class MatrixComponent implements OnInit {
 
    
   ngOnInit(): void {
+    this.ordinatesForm.invalid;
     this.degreeForm = this.fb.group({
       degree: [this.degree, 
                Validators.required,
