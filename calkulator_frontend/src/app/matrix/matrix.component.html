@@ -33,9 +33,9 @@
                                 <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['required']">Cell is required.</div>
                                <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']">Only numbers are allowed!</div>
                             </div>
-                           
+                        <span *ngIf="j < degree-1 " style="color:rgb(197, 21, 197);font-size:1.5em">+</span>
                         </div>
-                    </div>=
+                    </div><span style="color:aliceblue;font-size:1.5em">=</span>
                 </div>
                 <div *ngIf="matrixForm.errors?.['backend']" class="alert alert-dark error-message" role="alert" >
                     {{ matrixForm.errors?.['backend'] }}

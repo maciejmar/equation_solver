@@ -12,7 +12,8 @@ export class MatrixComponent implements OnInit {
  
   degreeForm!: FormGroup;
   degree!:number; 
-  
+  minSize=2;
+  maxSize=7;
   matrixForm!: FormGroup;
   rows:number[] = [];
   cols:number[] = [];
@@ -110,7 +111,7 @@ export class MatrixComponent implements OnInit {
       // Extract the degree directly from the form control.
       const degreeControl = this.profileForm.get('degree');
       const newDegree = degreeControl ? +degreeControl.value! : 0;
-      if (newDegree > 1 && newDegree < 7)  {
+      if (newDegree > this.minSize && newDegree <= this.maxSize)  {
         this.degree = newDegree;
         this.updateMatrixSize(newDegree);
         this.updateOrdinatesSize(newDegree);
@@ -179,7 +180,7 @@ export class MatrixComponent implements OnInit {
     degreeValidator(): ValidatorFn {
       return (control: AbstractControl): ValidationErrors | null => {
         const result = control.value;
-        if (result < 2 || result > 7 ){
+        if (result < this.minSize || result > this.maxSize ){
           return {'expressionInvalid' : true}
         }
         return null;
