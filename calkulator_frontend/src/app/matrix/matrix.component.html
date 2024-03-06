@@ -55,7 +55,7 @@
     </div>
     
 </div>
-<div class="badge badge-light container" [hidden]="!ordinatesForm.valid">
+<div *ngIf="ordinatesForm.touched" class="badge badge-light container">
     <div class="results" name="response">
         The solution is: 
         <span *ngFor="let result of results; let i = index">
