@@ -1,146 +1,164 @@
-
 body{
   background-color: rgb(2, 14, 24);
 }
+ * {
+   border-radius:5px;
+ }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
-  margin: 0;
+}
+input {
+  background-color: rgba(125, 138, 167, 1);
+  font-size: 1rem; 
+  padding: 0.5em; 
+  border: 1px solid #ccc;
 }
 
-input{
-    background-color: rgba(125, 138, 167,1);
+@media (min-width: 768px) {
+  .forms-container {
+    flex-direction: row; /* Side by side if enough space */
+    flex-wrap: wrap; /* Allow wrapping if needed */
+  }
+
+  .form-matrix, .form-ordinates {
+    /* Adjust sizes to fit side by side, you might need to adjust these values */
+    width: 50%;
+  }
 }
 
-.badge{
- text-align:  center;
- align-items: center;
+@media screen and (min-width: 1200px) {
+  .form-matrix, .form-ordinates {
+    flex-basis: auto; /* Allows them to grow or shrink as needed */
+  }
 }
+
+.cell-container {
+  display: flex;
+  flex-direction:row;
+  width:auto;
+}
+.ordinatesButton {
+  display:flex;
+  flex-direction:row;
+}
+
+.formWithButton { 
+  font-size: 1rem;
+}
+
 .bgcell{
-    text-align:  center;
-    align-items: center;
-    font-size:1.5em;
+  width:auto;
+  height:auto;
+  padding:0;
+  font-size:2em;
+
+}
+.matrix-cell{
+  width:100%;
 }
 
+.forms-container{
+  font-size:1em;
+  width:auto;
+  margin:1%;
+}
 .profile{
     max-width: 14%;
     margin-bottom:2%;
     margin-top:3%;
     margin-left:5%;
 }
-
-.forms-container{
-    margin-top:0%;
-    margin-left: 0%;
-    margin-bottom:0;
-    margin-right:0;
-    display:flex;
-    flex-direction: row;
-}
-
 .form-profile{
   width: 30%;
 }
 
 .form-matrix{
-  width:70%;
+  width:auto;
   display:flex;
   flex-direction: row;
+  //flex-wrap:wrap;
+  //margin-top:1%;
+}
+.matrix-direction{
+  flex-direction:row;
+}
+.ordinates-direction{
+  flex-direction:column;
+  
 }
 
 .form-ordinates{
-width:20%;
-//justify-content:flex-start;
+   width:50%;
 }
-
-
 
 .matrix-row {
     display: flex;
-    justify-content: center;
-    
+    align-content: center;
   }
   
-  .matrix-cell {
-    margin: 0 0%;
-    width:45%;
-    
-    border-style:solid rgb(49, 49, 141);
-    
-  }
-  
-  .cell-container{
-    display: flex;
+  .cell-input{
+    font-size:1em;
   }
 
+
   .ordinates-row{
-   display:flex;
-   flex-direction: column;
-   width:20%;
+    font-size:1em;
   }
   .ordinates-cell{
     background-color: rgba(19, 102, 128, 0.89);
-    margin-top: 10%;
-    margin-bottom:10%;
-    padding: 0;
-    
-    
   }
-  .input-ordinate{
-    background-color: rgba(230, 231, 168, 1);
-    width:100%;
-  }
-
-  .formWithButton{
-    display:flex;
-    flex-direction:column;
-    align-items: center;
-    width:100%;
-  }
+ 
   .buttonwidth{
-    width:20%;
+    width:50%;
   }
 
   .error-message{ 
-    margin:3%;
+    
     color:rgb(155, 8, 8);
-    background-color: chocolate;
-  }
+    background-color: chocolate; 
+    }
+    
+  .error-placeholder {
+    height: 20px; 
+    visibility: hidden;
   
+  }
   .results{
-
     color:rgb(226, 210, 190);
     background-color: rgb(155, 8, 8);
     text-align: left;
-    
   }
 
   .container{
-    margin-top:5%;
+
+    margin-left:20%;
     font-size:2.5em;
-    max-width:40%;
+    max-width:50%;
     background-color: rgb(155, 8, 8);
     color:rgb(175, 132, 75);
     display:flex;
-    flex-direction:row;
-    justify-content: flex-start;
-    
   }
   .solutionCell{
-    justify-content: flex-start;
+    
+    margin-top:0;
   }
 
-  .ordinatesButton{
-    justify-content: flex-start;
-  }
   .buttonsMargin{
-    margin-top:20px;
+    margin-top:1%; 
   }
-  .rowContentStart{
+
+  .plusSign{
+    color:rgb(224, 149, 224);
+    font-size:1.5em;
     display: flex;
-    justify-content: flex-start;
+    
   }
-  .cellLeft{
-    text-align: left;
+  .equalSign{
+    color:rgb(224, 149, 224);
+    font-size:1.5em;
+  }
+  .hiddenPlus {
+    visibility: hidden;
   }
