@@ -144,6 +144,10 @@ export class MatrixComponent implements OnInit {
           next: response => console.log('ResponseMatrix:', response),
           error: error => {
             console.log('error in submiting matrix -', error);
+            if (error.error && error.error.error === 'Matrix is singular, cannot proceed') {
+              // If the error is specifically because the matrix is singular
+              this.matrixForm.setErrors({ 'singularMatrix': 'Matrix is singular, cannot proceed' });
+            } 
             this.matrixForm.setErrors({ 'backend': error.error.error });
           }
         });
