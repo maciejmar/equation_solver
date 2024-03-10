@@ -2,60 +2,76 @@
     <div class="form-profile">
         <form  [formGroup]="profileForm" (ngSubmit)="onSubmit1()" class="profile" novalidate >
             <label name= "degree"></label>
-            <input type="number" formControlName = "degree" name="degree" class ="form-control round" placeholder="degree here">
+            <input type="number" formControlName = "degree" name="degree" class ="form-control round" placeholder="degree">
+          
             <div *ngIf="profileForm?.touched && profileForm?.errors?.['expressionInvalid']"
                   class="alert alert-danger">
                          degree must be an integer between 2 and 7
             </div>
+         
             <button [disabled]="profileForm.invalid" class="btn btn-secondary">Enter</button>
         </form>
     </div>
-    <div *ngIf="profileForm.value && profileForm.dirty" class="form-matrix">
+    <div *ngIf="profileForm.value && profileForm.dirty" class="form-matrix matrix-direction" >
         <form [formGroup]="matrixForm" (ngSubmit)="submitMatrixForm()">
-            <div class="formWithButton">
+            
                 <div *ngFor="let row of rows; let i = index" class="matrix-row">
                     <div *ngFor="let col of cols; let j = index" class="matrix-cell">
                         <div class="cell-container">
                             <input type="number" 
                                   [formControlName]="'cell' + i + '_' + j" 
-                                  class="form-control"
+                                  class="cell-input"
                                   id="cell"
                                   (blur)="onFieldBlur('cell' + i + '_' + j)"
                                   required>
-                            <label for="cell" class="badge bg-secondary bgcell" > x{{j+1}}</label>
-                            <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']" class="error-message">
-                                
-                                
+                            <span>
+                              <label for="cell" class="badge bg-secondary bgcell" > x{{j+1}}</label>
+                            </span>
+                            <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']" class="error-message"> 
                                 <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.touched && matrixForm.get('cell' + i + '_' + j)?.errors?.['expressionInvalid']"
-                                      class="alert alert-danger">
-                                           Numbers only!
+                                  class="alert alert-danger">
+                                    Numbers only!
                                 </div>
                                 <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['required']">Cell is required.</div>
-                               <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']">Only numbers are allowed!</div>
+                                <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']">Only numbers are allowed!</div>
                             </div>
-                        <span *ngIf="j < degree-1 " style="color:rgb(224, 149, 224);font-size:1.5em">+</span>
+                           
+                            <div [class]="j < cols.length - 1 ? 'plusSign' : 'plusSign hiddenPlus'">+</div>
+                            
+                            <!--<div *ngIf="j < degree-1 " class="plusSign">+</div>-->
                         </div>
-                    </div><span style="color:rgb(224, 149, 224);font-size:1.5em">=</span>
+                    </div> <span class="equalSign">=</span> 
                 </div>
                 <div *ngIf="matrixForm.errors?.['backend']" class="alert alert-dark error-message" role="alert" >
                     {{ matrixForm.errors?.['backend'] }}
                 </div>
-            
-                <button *ngIf="matrixForm.dirty && matrixForm.valid" [disabled]="matrixForm.invalid || !this.okToCompleteMatrixForm" type="submit" class="btn btn-primary buttonwidth buttonsMargin">Submit</button>
-            </div>
+                <button *ngIf="matrixForm.dirty && matrixForm.valid" 
+                        [disabled]="matrixForm.invalid || !this.okToCompleteMatrixForm || matrixForm.errors?.['singularMatrix']" 
+                        type="submit" 
+                        class="btn btn-primary buttonwidth buttonsMargin"
+                >Submit</button>
         </form>
-        <div class="formWithButton rowContentStart">  <!--form-ordinates-->
-            <form [formGroup]="ordinatesForm"  (ngSubmit) = "submitOrdinatesForm()">  <!--ordinates-row-->
-                <div *ngFor="let row of rows; let i = index" class="matrix-row ordinatesButton"> <!--form-control rounded ordinates-cell-->
-                        <input type ="number" class="form-control" style="width:40%"  [formControlName]="'ordin'+ i" required/><!--rounded input-ordinate-->
+        
+            <form [formGroup]="ordinatesForm"  (ngSubmit) = "submitOrdinatesForm()" class="form-matrix ordinates-direction">  <!--form-ordinates   ordinates-row-->
+                <div *ngFor="let row of rows; let i = index" class="matrix-row" > <!--ordinates-row              form-control rounded ordinates-cell-->
+                    <div class="matrix-cell">
+                        <div class="cell-container">
+                            <div class="cell-input">
+                                
+                              <input type ="number"   [formControlName]="'ordin'+ i" class="input-ordinate" required />
+                              <span><label class="badge bg-secondary bgcell"></label>x</span>
+                                
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <button *ngIf="ordinatesForm.dirty && ordinatesForm.valid && !okToCompleteMatrixForm" 
                         type="submit" 
-                        class="btn btn-primary buttonsMargin" 
+                        class="btn btn-primary buttonwidth buttonsMargin" 
                         [disabled]="!this.ordinatesForm.valid"
                 >Submit</button>
             </form>
-        </div>
+        
     </div>
     
 </div>
