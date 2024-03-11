@@ -46,7 +46,7 @@
                     {{ matrixForm.errors?.['backend'] }}
                 </div>
                 <button *ngIf="matrixForm.dirty && matrixForm.valid" 
-                        [disabled]="(matrixForm.invalid  || !this.okToCompleteMatrixForm) && !matrixForm.errors?.['singularMatrix']" 
+                        [disabled]="matrixForm.invalid  && (!this.okToCompleteMatrixForm || !matrixForm.errors?.['singularMatrix'])" 
                         type="submit" 
                         class="btn btn-primary buttonwidth buttonsMargin"
                 >Submit</button>
@@ -76,7 +76,7 @@
     
 </div>
 <div *ngIf="ordinatesForm.dirty && ordinatesForm.valid && 
-            matrixForm.dirty && matrixForm.valid && !matrixForm.errors?.['singularMatrix']"  class="badge badge-light container">
+            matrixForm.dirty && matrixForm.valid && !matrixForm.errors?.['singularMatrix'] && okToCompleteMatrixForm"  class="badge badge-light container">
     <div class="results" name="response">
         The solution is: 
         <span *ngFor="let result of results; let i = index">
