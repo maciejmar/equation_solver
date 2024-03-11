@@ -147,7 +147,7 @@ export class MatrixComponent implements OnInit {
             if (error.error && error.error.error === 'Matrix is singular, cannot proceed') {
               // If the error is specifically because the matrix is singular
               this.matrixForm.setErrors({ 'singularMatrix': 'Matrix is singular, cannot proceed' });
-              this.okToCompleteOrdinatesForm = false;
+              //this.okToCompleteOrdinatesForm = false;
             } 
             this.matrixForm.setErrors({ 'backend': error.error.error });
           }
