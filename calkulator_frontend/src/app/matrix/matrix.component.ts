@@ -147,6 +147,7 @@ export class MatrixComponent implements OnInit {
             if (error.error && error.error.error === 'Matrix is singular, cannot proceed') {
               // If the error is specifically because the matrix is singular
               this.matrixForm.setErrors({ 'singularMatrix': 'Matrix is singular, cannot proceed' });
+              this.okToCompleteOrdinatesForm = false;
             } 
             this.matrixForm.setErrors({ 'backend': error.error.error });
           }
@@ -166,6 +167,7 @@ export class MatrixComponent implements OnInit {
           this.okToCompleteMatrixForm = true;
         }
         console.log(this.ordinatesForm.value);
+        //this.okToCompleteMatrixForm = true;
         this.apiService.postOrdinatesData(ordinatesData).subscribe({
            next: response => { 
                                console.log('ResponseOrdinates:', response.solution);
