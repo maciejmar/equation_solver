@@ -34,6 +34,10 @@ input {
   }
 }
 
+.button_profile{
+  margin-top:15%;
+}
+
 .cell-container {
   display: flex;
   flex-direction:row;
@@ -72,6 +76,7 @@ input {
 }
 .form-profile{
   width: 30%;
+  
 }
 
 .form-matrix{
@@ -132,18 +137,18 @@ input {
   }
 
   .container{
-
-    margin-left:20%;
-    font-size:2.5em;
-    max-width:50%;
+    display:flex;
+    align-items: left;
+    width:20%;
+    margin-top:1%;
+    margin-left:0;
+    font-size:2vw;
+    max-width:auto;
     background-color: rgb(155, 8, 8);
     color:rgb(175, 132, 75);
     display:flex;
   }
-  .solutionCell{
-    
-    margin-top:0;
-  }
+  
 
   .buttonsMargin{
     margin-top:1%; 
@@ -162,3 +167,46 @@ input {
   .hiddenPlus {
     visibility: hidden;
   }
+
+input{
+ width:8vw;
+}
+
+.forms-container {
+  display: flex;
+  flex-direction: column; /* Stack vertically on narrow screens */
+  font-size: 1em;
+  width: auto;
+  margin: 1%;
+}
+
+
+/* Adjustments for wider screens */
+@media (min-width: 1200px) {
+  .forms-container {
+    flex-direction: column; /* Side by side if enough space */
+    flex-wrap: wrap; /* Allow wrapping if needed */
+  }
+
+  .form-matrix, .form-ordinates {
+    flex-basis: auto; /* Allows them to grow or shrink as needed */
+     /* Adjust if necessary to fit side by side */
+  }
+}
+
+@-webkit-keyframes blinker {
+  from { opacity: 1.0; }
+  to { opacity: 0.0; }
+}
+
+
+.blink_me {
+  animation: blinker 1s linear infinite;
+  margin-top:5%;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}

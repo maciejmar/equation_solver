@@ -1,13 +1,13 @@
-<div class="equation-solver-container">
+<div>
     <form [formGroup]="equationForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
+      <div>
         <label for="n">Number of Equations (n):</label>
         <input type="number" id="n" formControlName="n" (change)="onNChange()" min="1" max="6">
       </div>
   
       <div formArrayName="equations" *ngFor="let equationGroup of equationsFormArray.controls; let i = index" [formGroupName]="i">
         <div formArrayName="coefficients">
-          <div *ngFor="let ctrl of getControls(equationGroup); let j = index" class="coefficient-field">
+          <div *ngFor="let ctrl of getControls(equationGroup); let j = index">
             <input type="number" [formControlName]="j">
             <!-- ... -->
           </div>
@@ -16,7 +16,7 @@
         <!-- ... -->
       </div>
   
-      <button type="submit" class="btn btn-primary">Solve Equations</button>
+      <button type="submit" >Solve Equations</button>
     </form>
   </div>
 
