@@ -80,7 +80,7 @@
     <div *ngIf="ordinatesForm.dirty && ordinatesForm.valid && 
         matrixForm.dirty && matrixForm.valid && !matrixSingular && okToCompleteMatrixForm" class="badge text-left container">
         <div name="response" >
-            <div class="spinner-border text-danger" style="border-radius:30px" role="status"></div>
+           
             The solution is: 
             <span *ngFor="let result of results; let i = index">
                 <div>
