@@ -9,7 +9,7 @@
                          degree must be an integer between 2 and 7
             </div>
          
-            <button [disabled]="profileForm.invalid" class="btn btn-secondary">Enter</button>
+            <button [disabled]="profileForm.invalid" class="btn btn-secondary button_profile">Enter</button>
         </form>
     </div>
     <div *ngIf="profileForm.value && profileForm.dirty" class="form-matrix matrix-direction" >
@@ -49,7 +49,7 @@
                         [disabled]="matrixForm.invalid && (!this.okToCompleteMatrixForm || !matrixForm.errors?.['singularMatrix'])"
                         type="submit" 
                         class="btn btn-primary buttonwidth buttonsMargin"
-                >Submit</button>
+                >Submit matrix</button>
         </form>
         
             <form [formGroup]="ordinatesForm"  (ngSubmit) = "submitOrdinatesForm()" class="form-matrix ordinates-direction">  <!--form-ordinates   ordinates-row-->
@@ -67,22 +67,26 @@
                 </div>
                 <button *ngIf="ordinatesForm.dirty && ordinatesForm.valid && !okToCompleteMatrixForm && !matrixForm.errors?.['singularMatrix']" 
                         type="submit" 
-                        class="btn btn-primary buttonwidth buttonsMargin" 
+                        class="btn btn-primary blink_me" 
                         [disabled]="!this.ordinatesForm.valid"
-                >Submit</button>
+                >
+                  {{ this.matrixForm.errors ? 'Change matrix' : 'See result'}}    
+                </button>
             </form>
         
     </div>
     
-</div>
-<div *ngIf="ordinatesForm.dirty && ordinatesForm.valid && 
-     matrixForm.dirty && matrixForm.valid && !matrixSingular && okToCompleteMatrixForm" class="badge badge-light container">
-    <div class="results" name="response">
-        The solution is: 
-        <span *ngFor="let result of results; let i = index">
-            <div class="solucionCell cellLeft">
-                    x{{i}}={{result| number:'1.0-4'}}{{i < results.length - 1 ? '' : ''}}
-            </div>        
-        </span> 
+
+    <div *ngIf="ordinatesForm.dirty && ordinatesForm.valid && 
+        matrixForm.dirty && matrixForm.valid && !matrixSingular && okToCompleteMatrixForm" class="badge text-left container">
+        <div name="response" >
+            <div class="spinner-border text-danger" style="border-radius:30px" role="status"></div>
+            The solution is: 
+            <span *ngFor="let result of results; let i = index">
+                <div>
+                        x{{i}}={{result| number:'1.0-4'}}{{i < results.length - 1 ? '' : ''}}
+                </div>        
+            </span> 
+        </div>
     </div>
 </div>
