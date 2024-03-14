@@ -79,7 +79,7 @@
 
     <div *ngIf="ordinatesForm.dirty && ordinatesForm.valid && 
         matrixForm.dirty && matrixForm.valid && !matrixSingular && okToCompleteMatrixForm" class="badge text-left container">
-        <div name="response" >
+        <div name="response" class="solution_elements" >
            
             The solution is: 
             <span *ngFor="let result of results; let i = index">
