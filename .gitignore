@@ -9,6 +9,9 @@
 # Backup files # 
 ./equation_solver/*.bak 
 
+#android app 
+./android/
+
 # If you are using PyCharm # 
 # User-specific stuff
 ./equation_solver/.idea/**/workspace.xml

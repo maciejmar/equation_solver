@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">calkulator-frontend</string>
+    <string name="title_activity_main">calkulator-frontend</string>
+    <string name="package_name">com.mmarosz.calkulator</string>
+    <string name="custom_url_scheme">com.mmarosz.calkulator</string>
+</resources>
