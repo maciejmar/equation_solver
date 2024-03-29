@@ -5,10 +5,11 @@ COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
 RUN npm run build --prod
-RUN chmod -R 755 /usr/share/nginx/html
+
 # Stage 2: Serve the Angular app with Nginx
 FROM nginx:alpine
 COPY --from=build /app/dist/calkulator_frontend /usr/share/nginx/html
+RUN chmod -R 755 /usr/share/nginx/html
 # If you have a custom Nginx configuration, uncomment and adjust the following line
 # COPY nginx.conf /etc/nginx/conf.d/default.conf
 
