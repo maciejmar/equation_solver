@@ -28,7 +28,7 @@ DEBUG = False #turn True by the development
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'https://vps-9f62e310.vps.ovh.net:8082'
+    'https://lequations.mathe.pl:8082'
 ]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
