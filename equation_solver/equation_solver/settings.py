@@ -28,7 +28,8 @@ DEBUG = False #turn True by the development
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'https://lequations.mathe.pl:8082'
+    'https://lequations.mathe.pl:8082',
+    'https://lequations.mathe.pl:'
 ]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
