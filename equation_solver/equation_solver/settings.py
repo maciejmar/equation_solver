@@ -80,6 +80,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'equation_solver.wsgi.application'
 
+if not DEBUG:
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
