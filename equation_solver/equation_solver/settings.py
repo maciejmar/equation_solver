@@ -60,6 +60,8 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_ALLOW_ALL = True
 
+CSRF_TRUSTED_ORIGINS = ['https://lequations.mathe.pl']
+
 ROOT_URLCONF = 'equation_solver.urls'
 
 TEMPLATES = [
