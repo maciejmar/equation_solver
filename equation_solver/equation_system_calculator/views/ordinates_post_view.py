@@ -3,8 +3,10 @@ from rest_framework.response import Response
 from ..own_methods.equation_solution_result import equation_result
 from django.core.cache import cache
 import numpy as np
+from django.views.decorators.csrf import csrf_exempt
 
 class OrdinatesPostView(APIView):
+    @csrf_exempt    
     def post(self, request, format=None):
         data = request.data
         print('Received ordinates data:', data)
