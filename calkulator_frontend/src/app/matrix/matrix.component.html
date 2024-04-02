@@ -52,7 +52,7 @@
                 >Submit matrix</button>
         </form>
         
-            <form [formGroup]="ordinatesForm"  (ngSubmit) = "submitOrdinatesForm()" class="form-matrix ordinates-direction">  <!--form-ordinates   ordinates-row-->
+            <form [formGroup]="ordinatesForm"  (ngSubmit) = "submitOrdinatesForm()" class="form-matrix ordinates-direction">  {% csrf_token %}<!--form-ordinates   ordinates-row-->
                 <div *ngFor="let row of rows; let i = index" class="matrix-row" > <!--ordinates-row              form-control rounded ordinates-cell-->
                     <div class="matrix-cell">
                         <div class="cell-container">
