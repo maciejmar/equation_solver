@@ -23,13 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$1^y0!n^bm_n0o9is4m80tjf@t*2hr*5^hbdu#0v8vx9+3l+65'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False #turn True by the development
+DEBUG = True #turn True by the development
 
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
+    'lequations.mathe.pl',
     'lequations.mathe.pl:8082',
-    'lequations.mathe.pl'
+    
 ]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -80,8 +81,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'equation_solver.wsgi.application'
 
 if not DEBUG:
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
+    #CSRF_COOKIE_SECURE = True
+    #SESSION_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
 
 # Database
