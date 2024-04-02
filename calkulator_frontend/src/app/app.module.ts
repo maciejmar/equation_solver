@@ -4,7 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EquationSolverComponent } from './equation-solver/equation-solver.component';
 import { ReactiveFormsModule } from '@angular/forms'; // Import here
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { ApiService } from './api.service';
 import { MatrixComponent } from './matrix/matrix.component';
 import { NavComponent } from './nav/nav.component'; // Your API service
@@ -23,6 +23,10 @@ import { FormsModule } from '@angular/forms';
     AppRoutingModule,
     ReactiveFormsModule, 
     HttpClientModule,
+    HttpClientXsrfModule.withOptions({
+      cookieName: 'csrftoken', 
+      headerName: 'X-CSRFToken', 
+    }),
     FormsModule,
     
   ],
