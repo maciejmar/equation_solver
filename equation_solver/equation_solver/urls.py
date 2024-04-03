@@ -20,8 +20,8 @@ from equation_system_calculator.views.equation_solver_view import solve, solve_e
 from equation_system_calculator.views.equation_solver_view import EquationSolver
 from equation_system_calculator.views.another_post_view  import AnotherPostView
 from equation_system_calculator.views.ordinates_post_view import OrdinatesPostView
-from django.views.decorators.csrf import csrf_exempt
 from django.urls import include, path
+from equation_system_calculator.views import csrf_token
 
 urlpatterns = [
 # Include app-level URLs
@@ -30,11 +30,11 @@ urlpatterns = [
     # path('calculator/solve_equations/', solve_equations),
     #include('equation_system_calculator.urls'),
     #path('equation_solver/', EquationSolver.as_view(), name='equation_solver'),
-    path('equation_solver/', csrf_exempt(EquationSolver.as_view()), name='equation_solver'),
-    
+    path('another_post/', AnotherPostView.as_view(), name='another_post'),
     path('calculator/', include('equation_system_calculator.urls')), 
-    path('equation_solver/', csrf_exempt(EquationSolver.as_view()), name='equation_solver'),
-    path('ordinates/', csrf_exempt(OrdinatesPostView.as_view()), name='ordinates')
+    path('equation_solver/', EquationSolver.as_view(), name='equation_solver'),
+    path('ordinates/', OrdinatesPostView.as_view(), name='ordinates'),
+    path('api/csrf_token/', csrf_token, name='csrf_token'),
 ]
 
 
