@@ -46,7 +46,7 @@ export class ApiService {
     return this.fetchCsrfToken().pipe(
       switchMap(csrfToken => {
         const headers = new HttpHeaders({ 'X-CSRFToken': csrfToken });
-        return this.http.post<any>(this.apiUrl, matrixData, { headers });
+        return this.http.post<any>(this.apiUrl, matrixData, { headers, responseType: 'text' as 'json' });
       })
     );
   }
@@ -55,7 +55,7 @@ export class ApiService {
     return this.fetchCsrfToken().pipe(
       switchMap(csrfToken => {
         const headers = new HttpHeaders({ 'X-CSRFToken': csrfToken });
-        return this.http.post<any>(this.apiAnotherUrl, degreeData, { headers });
+        return this.http.post<any>(this.apiAnotherUrl, degreeData, { headers, responseType: 'text' as 'json' });
       })
     );
   }
@@ -64,7 +64,7 @@ export class ApiService {
     return this.fetchCsrfToken().pipe(
       switchMap(csrfToken => {
         const headers = new HttpHeaders({ 'X-CSRFToken': csrfToken });
-        return this.http.post<any>(this.apiOrdinatesUrl, ordinatesData, { headers });
+        return this.http.post<any>(this.apiOrdinatesUrl, ordinatesData, { headers, responseType: 'text' as 'json' });
       })
     );
   }
