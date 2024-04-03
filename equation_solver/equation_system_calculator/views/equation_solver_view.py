@@ -9,6 +9,8 @@ from django.core.cache import cache
 from numpy.linalg import LinAlgError
 from django.core.cache import cache
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.middleware.csrf import get_token
 
 # def post(self, request, format=None):
 #         data = request.data
@@ -21,6 +23,9 @@ from django.views.decorators.csrf import csrf_exempt
 #         return Response({'solution': solution})
     
 # Class-based view for POST request
+
+
+
 
 
 class EquationSolver(APIView):
@@ -100,7 +105,8 @@ class OrdinatesSolver(APIView):
             return Response({'error': 'Ordinates data not found'}, status=400)
        
         
-     
+def csrf_token(request):
+    return JsonResponse({'csrfToken': get_token(request)})    
 
 # Standalone function for GET request
 def solve(request):
