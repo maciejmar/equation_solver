@@ -29,7 +29,7 @@ from django.middleware.csrf import get_token
 
 
 class EquationSolver(APIView):
-    @csrf_exempt
+    
     def post(self, request, format=None):
       data = request.data
       print('Received matrix data:', data)
@@ -68,7 +68,7 @@ class EquationSolver(APIView):
       
         
 class MatrixSolver(APIView):
-    @csrf_exempt
+    
     def post(self, request, format=None):
         data = request.data
         print('Received matrix data:', data)
@@ -87,7 +87,7 @@ class MatrixSolver(APIView):
         return Response({'result': 'we are in equation_solver'})
 
 class OrdinatesSolver(APIView):
-    @csrf_exempt
+    
     def post(self, request, format=None):
         data = request.data
         print('Received ordinates data:', data)
