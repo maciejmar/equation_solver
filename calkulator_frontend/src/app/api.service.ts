@@ -14,6 +14,7 @@ export class ApiService {
   apiUrl = environment.apiUrl;
   apiAnotherUrl = environment.apiAnotherUrl;
   apiOrdinatesUrl = environment.apiOrdinatesUrl;
+  apiCsrfUrl = environment.apiCsrfUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -23,7 +24,7 @@ export class ApiService {
       return of(this.csrfToken); // 'of' is from rxjs
     } else {
       // Ensure this URL is correct and points to your Django endpoint for CSRF token retrieval
-      return this.http.get<{ csrfToken: string }>(`${environment.apiUrl}csrf/`).pipe(
+      return this.http.get<{ csrfToken: string }>(`${environment.apiCsrfUrl}csrf/`).pipe(
         map(response => {
           this.csrfToken = response.csrfToken;
           return this.csrfToken;
