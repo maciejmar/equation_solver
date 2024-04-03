@@ -34,7 +34,7 @@ urlpatterns = [
     path('calculator/', include('equation_system_calculator.urls')), 
     path('equation_solver/', EquationSolver.as_view(), name='equation_solver'),
     path('ordinates/', OrdinatesPostView.as_view(), name='ordinates'),
-    path('api/csrf_token/', csrf_token, name='csrf_token'),
+    path('calculator/solve_equations/csrf/', csrf_token, name='csrf_token')
 ]
 
 
