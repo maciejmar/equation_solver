@@ -1,5 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, throwError, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 
 
@@ -7,28 +9,77 @@ import { environment } from '../environments/environment';
   providedIn: 'root'
 })
 export class ApiService {
-  //apiUrl = 'http://localhost:8001/calculator/solve/';  // URL of my Django API
+  private csrfToken: string | null = null;
 
   apiUrl = environment.apiUrl;
   apiAnotherUrl = environment.apiAnotherUrl;
   apiOrdinatesUrl = environment.apiOrdinatesUrl;
+
   constructor(private http: HttpClient) { }
+
+  //retrive CSRF token
+  private fetchCsrfToken(): Observable<string> {
+    if (this.csrfToken) {
+      return of(this.csrfToken); // 'of' is from rxjs
+    } else {
+      // Ensure this URL is correct and points to your Django endpoint for CSRF token retrieval
+      return this.http.get<{ csrfToken: string }>(`${environment.apiUrl}csrf/`).pipe(
+        map(response => {
+          this.csrfToken = response.csrfToken;
+          return this.csrfToken;
+        }),
+        catchError(error => {
+          console.error('Error fetching CSRF token', error);
+          return throwError(() => new Error('Error fetching CSRF token'));
+        })
+      );
+    }
+  }
+
 
   getSolverData() {
     return this.http.get<any>(`${this.apiUrl}`);
   }
 
-  postMatrixData(matrixData: any) {
-    return this.http.post<any>( this.apiUrl, matrixData );
+  postMatrixData(matrixData: any): Observable<any> {
+    return this.fetchCsrfToken().pipe(
+      switchMap(csrfToken => {
+        const headers = new HttpHeaders({ 'X-CSRFToken': csrfToken });
+        return this.http.post<any>(this.apiUrl, matrixData, { headers });
+      })
+    );
   }
 
-  postDegreeData(degreeData: any) {
-     return this.http.post<any> ( this.apiAnotherUrl, degreeData ); //(`${this.apiUrl}another_post/`, degreeData);
+  postDegreeData(degreeData: any): Observable<any> {
+    return this.fetchCsrfToken().pipe(
+      switchMap(csrfToken => {
+        const headers = new HttpHeaders({ 'X-CSRFToken': csrfToken });
+        return this.http.post<any>(this.apiAnotherUrl, degreeData, { headers });
+      })
+    );
   }
 
-  postOrdinatesData(ordinatesData: any) {
-    return this.http.post<any> ( this.apiOrdinatesUrl, ordinatesData ); //(`${this.apiUrl}ordinates/`, ordinatesData);
- }
+  postOrdinatesData(ordinatesData: any): Observable<any> {
+    return this.fetchCsrfToken().pipe(
+      switchMap(csrfToken => {
+        const headers = new HttpHeaders({ 'X-CSRFToken': csrfToken });
+        return this.http.post<any>(this.apiOrdinatesUrl, ordinatesData, { headers });
+      })
+    );
+  }
+
+
+//   postMatrixData(matrixData: any) {
+//     return this.http.post<any>( this.apiUrl, matrixData );
+//   }
+
+//   postDegreeData(degreeData: any) {
+//      return this.http.post<any> ( this.apiAnotherUrl, degreeData ); //(`${this.apiUrl}another_post/`, degreeData);
+//   }
+
+//   postOrdinatesData(ordinatesData: any) {
+//     return this.http.post<any> ( this.apiOrdinatesUrl, ordinatesData ); //(`${this.apiUrl}ordinates/`, ordinatesData);
+//  }
 
   
   
