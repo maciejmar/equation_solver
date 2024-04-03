@@ -21,7 +21,7 @@ from equation_system_calculator.views.equation_solver_view import EquationSolver
 from equation_system_calculator.views.another_post_view  import AnotherPostView
 from equation_system_calculator.views.ordinates_post_view import OrdinatesPostView
 from django.urls import include, path
-from equation_system_calculator.views import csrf_token
+from equation_system_calculator.views.equation_solver_view import csrf_token
 
 urlpatterns = [
 # Include app-level URLs
