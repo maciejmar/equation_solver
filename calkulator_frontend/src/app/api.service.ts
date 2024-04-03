@@ -54,7 +54,7 @@ export class ApiService {
   postDegreeData(degreeData: any): Observable<any> {
     return this.fetchCsrfToken().pipe(
       switchMap(csrfToken => {
-        const headers = new HttpHeaders({ 'X-CSRFToken': csrfToken });
+        const headers = new HttpHeaders({ 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' });
         return this.http.post<any>(this.apiAnotherUrl, degreeData, { headers, responseType:  'json' });
       })
     );
@@ -63,7 +63,7 @@ export class ApiService {
   postOrdinatesData(ordinatesData: any): Observable<any> {
     return this.fetchCsrfToken().pipe(
       switchMap(csrfToken => {
-        const headers = new HttpHeaders({ 'X-CSRFToken': csrfToken });
+        const headers = new HttpHeaders({ 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' });
         return this.http.post<any>(this.apiOrdinatesUrl, ordinatesData, { headers, responseType:  'json' });
       })
     );
