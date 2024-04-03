@@ -22,7 +22,7 @@ from .views.ordinates_post_view import OrdinatesPostView
 from .views.equation_solver_view import csrf_token
 
 urlpatterns = [
-    path('api/csrf_token/', csrf_token, name='csrf_token'),
+    path('csrf/', csrf_token, name='csrf_token'),
     path('equation_solver/', EquationSolver.as_view(), name='equation_solver'),
     path('solve/', solve, name='solve'),
     path('solve_equations/', solve_equations, name='solve_equations'),
