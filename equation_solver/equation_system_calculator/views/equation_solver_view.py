@@ -12,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 
+
 # def post(self, request, format=None):
 #         data = request.data
 #         print('Received data:', data)
@@ -64,8 +65,8 @@ class EquationSolver(APIView):
 
       m = cache.get('matrix_data')
       print('m in get of cache is:', m)
-      return Response({'result': "we are in equation_solver"})
-      
+      dataRes = {'result': "we are in equation_solver"}
+      return JsonResponse(dataRes)
         
 class MatrixSolver(APIView):
     
@@ -84,7 +85,8 @@ class MatrixSolver(APIView):
         print(matrix)
         cache.set('matrix_data', matrix, timeout=300)  # Store matrix data for 5 minutes
         print('-------------------------------- matrix =' )
-        return Response({'result': 'we are in equation_solver'})
+        dataRes = {'result': 'we are in equation_solver'}
+        return JsonResponse(dataRes)
 
 class OrdinatesSolver(APIView):
     
@@ -100,9 +102,11 @@ class OrdinatesSolver(APIView):
         if matrix is not None:
             solution = equation_result(matrix, ordinates)
             print ('I solved the equation system ->',solution)
-            return Response({'solution': solution})
+            dataRes = {'solution': solution}
+            return JsonResponse(dataRes)
         else:
-            return Response({'error': 'Ordinates data not found'}, status=400)
+            dataRes={'error': 'Ordinates data not found'}
+            return JsonResponse(dataRes,status_code=400)
        
         
 def csrf_token(request):
