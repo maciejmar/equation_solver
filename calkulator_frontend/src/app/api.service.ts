@@ -46,7 +46,7 @@ export class ApiService {
     return this.fetchCsrfToken().pipe(
       switchMap(csrfToken => {
         const headers = new HttpHeaders({ 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' })
-        return this.http.post<any>(this.apiUrl, matrixData, { headers, responseType:  'text' as 'json'});
+        return this.http.post<any>(this.apiUrl, matrixData, { headers, responseType:   'json'});
       })
     );
   }
