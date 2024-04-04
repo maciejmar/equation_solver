@@ -45,8 +45,12 @@ export class ApiService {
   postMatrixData(matrixData: any): Observable<any> {
     return this.fetchCsrfToken().pipe(
       switchMap(csrfToken => {
-        const headers = new HttpHeaders({ 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' })
-        return this.http.post<any>(this.apiUrl, matrixData, { headers, responseType:   'json'});
+        if(csrfToken){
+          const headers = new HttpHeaders({ 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' })
+          return this.http.post<any>(this.apiUrl, matrixData, { headers, responseType:   'json'});
+        }
+        else return throwError(() => new Error('CSRF token is undefined.'));
+
       })
     );
   }
