@@ -21,12 +21,14 @@ export class ApiService {
   //retrive CSRF token
   private fetchCsrfToken(): Observable<string> {
     if (this.csrfToken) {
+      console.log('by fetching csrf token is - ', this.csrfToken);
       return of(this.csrfToken); // 'of' is from rxjs
     } else {
       // Ensure this URL is correct and points to your Django endpoint for CSRF token retrieval
-      return this.http.get<{ csrfToken: string }>(`${environment.apiCsrfUrl}csrf/`,{ responseType: 'json' }).pipe(
+      return this.http.get<{ csrfToken: string }>(`${environment.apiCsrfUrl}csrf/`,{ responseType: 'text' }).pipe(
         map(response => {
           this.csrfToken = response.csrfToken;
+          console.log('this csrf token in service=',this.csrfToken);
           return this.csrfToken;
         }),
         catchError(error => {
