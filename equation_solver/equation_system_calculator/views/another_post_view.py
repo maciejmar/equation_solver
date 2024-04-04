@@ -7,7 +7,7 @@ from django.core.cache import cache
 from django.views.decorators.csrf import csrf_exempt
 
 class AnotherPostView(APIView):
-    @csrf_exempt
+    
     def post(self, request, format=None):
         datal = request.data
         print('data in python = ', datal, ' ', request.data)
