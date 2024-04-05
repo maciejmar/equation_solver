@@ -27,6 +27,7 @@ export class ApiService {
       return this.http.get<{ csrfToken: string }>(`${environment.apiCsrfUrl}csrf/`,{ responseType: 'json' }).pipe(
         map(response => {
           this.csrfToken = response.csrfToken;
+          console.log('this isr response: ' , response)
           console.log('this csrf token in service=',this.csrfToken);
           return this.csrfToken;
         }),
