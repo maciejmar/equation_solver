@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
-import { JsonPipe } from '@angular/common';
 
 
 @Injectable({
@@ -22,19 +21,14 @@ export class ApiService {
   //retrive CSRF token
   private fetchCsrfToken(): Observable<string> {
     if (this.csrfToken) {
-      console.log('by fetching csrf token is - ', this.csrfToken);
       return of(this.csrfToken); // 'of' is from rxjs
     } else {
       // Ensure this URL is correct and points to your Django endpoint for CSRF token retrieval
-      return this.http.get<{ csrfToken: string }>(`${environment.apiCsrfUrl}csrf/`,{ responseType:  'text' as 'json' }).pipe(
+      return this.http.get<{ csrfToken: string }>(`${environment.apiCsrfUrl}csrf/`,{ responseType: 'json' }).pipe(
         map(response => {
           this.csrfToken = response.csrfToken;
-          const token = JSON.parse(this.csrfToken)
-          console.log('->', response)
-          console.log('token ' , token)
           console.log('this csrf token in service=',this.csrfToken);
-          
-          return token;
+          return this.csrfToken;
         }),
         catchError(error => {
           console.error('Error fetching CSRF token', error);
