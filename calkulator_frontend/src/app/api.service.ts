@@ -32,7 +32,7 @@ export class ApiService {
           return this.csrfToken;
         }),
         catchError(error => {
-          console.error('Error fetching CSRF token', error);
+          console.error('Error fetching CSRF token>>>>>>', error);
           return throwError(() => new Error('Error fetching CSRF token'));
         })
       );
@@ -48,6 +48,7 @@ export class ApiService {
     return this.fetchCsrfToken().pipe(
       switchMap(csrfToken => {
         if(csrfToken){
+          console.log('csrftoken in postMatrixData ', csrfToken)
           const headers = new HttpHeaders({ 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' })
           return this.http.post<any>(this.apiUrl, matrixData, { headers, responseType:   'json'});
         }
