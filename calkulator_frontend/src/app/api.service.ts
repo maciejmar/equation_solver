@@ -27,11 +27,12 @@ export class ApiService {
       // Ensure this URL is correct and points to your Django endpoint for CSRF token retrieval
       return this.http.get<{ csrfToken: string }>(`${environment.apiCsrfUrl}csrf/`,{ responseType:  'text' as 'json' }).pipe(
         map(response => {
-          this.csrfToken = response.csrfToken;
-          console.log('response csrf ', response)
+          this.csrfToken = JSON.parse(response.csrfToken) as string;
+          const token = JSON.parse(this.csrfToken)
+          console.log('->', response)
           console.log('this csrf token in service=',this.csrfToken);
           
-          return this.csrfToken;
+          return token;
         }),
         catchError(error => {
           console.error('Error fetching CSRF token', error);
