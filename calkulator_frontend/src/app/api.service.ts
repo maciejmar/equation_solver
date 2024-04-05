@@ -30,6 +30,7 @@ export class ApiService {
           this.csrfToken = JSON.parse(response.csrfToken) as string;
           const token = JSON.parse(this.csrfToken)
           console.log('->', response)
+          console.log('token ' , token)
           console.log('this csrf token in service=',this.csrfToken);
           
           return token;
