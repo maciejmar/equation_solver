@@ -22,6 +22,13 @@ export class MatrixComponent implements OnInit {
   okToCompleteMatrixForm:boolean = true;
   matrixSingular:boolean = false;
 
+  showPreview: boolean = false;  // Controls visibility of the preview window
+  previewValue: string = '';  // The value displayed in the preview
+  previewPositionX: number = 0;  // X-coordinate for positioning
+  previewPositionY: number = 0;  // Y-coordinate for positioning
+  previewTimeout: any;  // Timeout reference for auto-hiding
+
+
  // ordinatesForm!: FormGroup;
   
   profileForm = this.formb.group({
@@ -116,14 +123,29 @@ export class MatrixComponent implements OnInit {
     // }
 
     onSubmit1(): void {
-      // Extract the degree directly from the form control.
       const degreeControl = this.profileForm.get('degree');
-      const newDegree = degreeControl ? +degreeControl.value! : 0;
-      if (newDegree >= this.minSize && newDegree <= this.maxSize)  {
-        this.degree = newDegree;
-        this.updateMatrixSize(newDegree);
-        this.updateOrdinatesSize(newDegree);
-      }
+      
+    
+    if (degreeControl) {
+        const value = degreeControl.value ?? '';
+        const newDegree = parseInt(value, 10);  // ✅ Convert to integer
+
+        if (!isNaN(newDegree) && newDegree >= this.minSize && newDegree <= this.maxSize) {
+            this.degree = newDegree;
+            this.updateMatrixSize(newDegree);
+            this.updateOrdinatesSize(newDegree);
+        } else {
+            console.error("Invalid degree value:", degreeControl.value);
+        }
+    }
+      // Extract the degree directly from the form control.
+      // const degreeControl = this.profileForm.get('degree');
+      // const newDegree = degreeControl ? +degreeControl.value! : 0;
+      // if (newDegree >= this.minSize && newDegree <= this.maxSize)  {
+      //   this.degree = newDegree;
+      //   this.updateMatrixSize(newDegree);
+      //   this.updateOrdinatesSize(newDegree);
+      // }
     }
 
     submitMatrixForm():void {
@@ -136,6 +158,14 @@ export class MatrixComponent implements OnInit {
         console.log('Invalid matrix');
       }
       const matrixData = this.matrixForm.value;
+
+      // Convert all matrix values to numbers
+      Object.keys(matrixData).forEach(key => {
+        matrixData[key] = matrixData[key] !== '' ? parseFloat(matrixData[key]) : null;
+    });
+
+    console.log('Processed matrix data:', matrixData);
+
       console.log(this.matrixForm.value);
       if (this.matrixForm.valid) {
         this.matrixForm.disable();
@@ -164,6 +194,12 @@ export class MatrixComponent implements OnInit {
 
     submitOrdinatesForm():void {
         const ordinatesData = this.ordinatesForm.value;
+          // Convert all ordinates to numbers
+          Object.keys(ordinatesData).forEach(key => {
+            ordinatesData[key] = ordinatesData[key] !== '' ? parseFloat(ordinatesData[key]) : null;
+          });
+        console.log('Processed ordinates data:', ordinatesData);
+
         if (this.ordinatesForm.valid && this.okToCompleteOrdinatesForm){
           this.matrixForm.enable();
           this.okToCompleteOrdinatesForm = false;
@@ -222,7 +258,56 @@ export class MatrixComponent implements OnInit {
         // For example, you could set a flag to show an error message next to the field
       }
     }
-         
+       
+    showCellPreview(event: FocusEvent, fieldName: string, value: any): void {
+      this.showPreview = true;
+      this.previewValue = value || '';  // Display value (empty if none)
 
+      // Get the target input field's position
+      const target = event.target as HTMLElement;
+      const rect = target.getBoundingClientRect();
+      
+      // Position the preview above the input field
+      this.previewPositionX = rect.left + window.scrollX - 10;
+      this.previewPositionY = rect.top + window.scrollY - 60;
+
+      // Clear any existing timeout to prevent premature hiding
+      clearTimeout(this.previewTimeout);
+
+      // Hide ONLY the preview window after 3 seconds (inputs stay visible)
+      this.previewTimeout = setTimeout(() => {
+          this.hidePreviewOnly();
+      }, 3000);
+  }
+
+    updatePreview(event: Event, fieldName: string): void {
+      const input = event.target as HTMLInputElement;
+      this.previewValue = input.value;  // Synchronize the preview text with the input
+
+      // Show preview only if there's content in the input
+      this.showPreview = this.previewValue.trim() !== '';
+
+      // Get the target input field's position
+      const rect = input.getBoundingClientRect();
+      
+      // Position the preview above the input field
+      this.previewPositionX = rect.left + window.scrollX - 10;
+      this.previewPositionY = rect.top + window.scrollY - 60;
+
+      // Reset the idle timer every time the user types
+      clearTimeout(this.previewTimeout);
+      this.previewTimeout = setTimeout(() => {
+          this.hidePreviewOnly();
+      }, 3000);
+  }
+
+
+
+  // Hide the floating preview window (but NOT the input fields)
+  hidePreviewOnly(): void {
+      this.showPreview = false;
+  }
 }
+
+
 

@@ -24,7 +24,7 @@ input {
 
   .form-matrix, .form-ordinates {
     /* Adjust sizes to fit side by side, you might need to adjust these values */
-    width: 50%;
+    width: 80%;
   }
 }
 
@@ -139,10 +139,10 @@ input {
   .container{
     display:flex;
     align-items: left;
-    width:30%;
+    width:80%;
     margin-top:1%;
     margin-left:0;
-    font-size:2vw;
+    font-size:4vw;
     max-width:auto;
     background-color: rgb(155, 8, 8);
     color:rgb(175, 132, 75);
@@ -215,4 +215,35 @@ input{
  display:flex;
  flex-direction:column;
  align-items: flex-start; 
+}
+
+/* Floating preview window styling */
+.floating-preview {
+  position: absolute;
+  background-color: rgba(224, 226, 66, 0.95);
+  color: #000;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  opacity: 1;
+  z-index: 1000;
+  max-width: 200px;
+}
+
+/* Hide preview smoothly */
+.floating-preview.hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* Mobile-friendly adjustments */
+@media (max-width: 768px) {
+  .floating-preview {
+      font-size: 1.2em;
+      padding: 8px 15px;
+  }
 }

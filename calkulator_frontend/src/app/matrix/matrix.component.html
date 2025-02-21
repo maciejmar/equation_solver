@@ -1,8 +1,16 @@
 <div class="forms-container">
+    <div class="floating-preview" *ngIf="showPreview" [ngStyle]="{'top': previewPositionY + 'px', 'left': previewPositionX + 'px'}">
+        <span class="preview-text">{{ previewValue }}</span>
+    </div>
     <div class="form-profile">
         <form  [formGroup]="profileForm" (ngSubmit)="onSubmit1()" class="profile" novalidate >
             <label name= "degree"></label>
-            <input type="number" formControlName = "degree" name="degree" class ="form-control round" placeholder="degree">
+            <input type="tel"    
+                   formControlName = "degree" 
+                   name="degree" 
+                   class ="form-control round" 
+                   (input)="updatePreview($event, 'degree')"
+                   placeholder="degree 2-7">
           
             <div *ngIf="profileForm?.touched && profileForm?.errors?.['expressionInvalid']"
                   class="alert alert-danger">
@@ -12,18 +20,22 @@
             <button [disabled]="profileForm.invalid" class="btn btn-secondary button_profile">Enter</button>
         </form>
     </div>
+
+    
+
     <div *ngIf="profileForm.value && profileForm.dirty" class="form-matrix matrix-direction" >
         <form [formGroup]="matrixForm" (ngSubmit)="submitMatrixForm()">
             
                 <div *ngFor="let row of rows; let i = index" class="matrix-row">
                     <div *ngFor="let col of cols; let j = index" class="matrix-cell">
                         <div class="cell-container">
-                            <input type="number" 
-                                  [formControlName]="'cell' + i + '_' + j" 
-                                  class="cell-input"
-                                  id="cell"
-                                  (blur)="onFieldBlur('cell' + i + '_' + j)"
-                                  required>
+                            <input  type="tel"
+                                    [formControlName]="'cell' + i + '_' + j" 
+                                    class="cell-input"
+                                    id="cell"
+                                    (blur)="onFieldBlur('cell' + i + '_' + j)"
+                                    (input)="updatePreview($event, 'cell' + i + '_' + j)"
+                                    required>
                             <span>
                               <label for="cell" class="badge bg-secondary bgcell" > x{{j+1}}</label>
                             </span>
@@ -58,7 +70,11 @@
                         <div class="cell-container">
                             <div class="cell-input">
                                 
-                              <input type ="number"   [formControlName]="'ordin'+ i" class="input-ordinate" required />
+                              <input type ="tel"   
+                                     [formControlName]="'ordin'+ i" 
+                                     class="input-ordinate" 
+                                     (input)="updatePreview($event, 'ordin' + i)"
+                                     required />
                               <span><label class="badge bg-secondary bgcell"></label>x</span>
                                 
                             </div>
@@ -84,7 +100,7 @@
             The solution is: 
             <span *ngFor="let result of results; let i = index">
                 <div>
-                        x{{i}}={{result| number:'1.0-4'}}{{i < results.length - 1 ? '' : ''}}
+                        x{{i+1}}={{result| number:'1.0-4'}}{{i < results.length - 1 ? '' : ''}}
                 </div>        
             </span> 
         </div>
