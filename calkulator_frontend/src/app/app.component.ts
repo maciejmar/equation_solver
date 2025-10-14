@@ -1,10 +1,47 @@
-import { Component } from '@angular/core';
+// app.component.ts
+import { Component, OnInit } from '@angular/core';
+import { AdMob, BannerAdSize, BannerAdPosition } from '@capacitor-community/admob';
+import type { BannerAdOptions } from '@capacitor-community/admob';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
+  template: `<router-outlet></router-outlet>`, // or your app's template
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'calkulator_frontend';
+export class AppComponent implements OnInit {
+
+  constructor() { }
+
+  async ngOnInit() {
+    await this.initializeAdMob();
+  }
+
+  async initializeAdMob(): Promise<void> {
+    try {
+      // Initialize AdMob first
+      await AdMob.initialize();
+      console.log('AdMob initialized!');
+      // Now show the banner ad
+      await this.showBannerAd();
+    } catch (error) {
+      console.error('Error initializing AdMob:', error);
+    }
+  }
+
+  async showBannerAd(): Promise<void> {
+    const options: BannerAdOptions = {
+      adId: 'ca-app-pub-3940256099942544/6300978111', // Test Banner Ad Unit ID
+      adSize: BannerAdSize.BANNER,
+      position: BannerAdPosition.BOTTOM_CENTER,
+      margin: 0,
+      isTesting: true, // Set to true for testing
+    };
+
+    try {
+      await AdMob.showBanner(options);
+      console.log("Test banner ad displayed!");
+    } catch (error) {
+      console.error("Error showing banner ad:", error);
+    }
+  }
 }

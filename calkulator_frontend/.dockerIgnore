@@ -1,0 +1,38 @@
+# Node/Angular
+node_modules
+dist
+.angular
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+**/*.log
+**/*.map
+
+# VCS/IDE
+.git
+.gitignore
+\.idea
+\.vscode
+*.iml
+
+# Archiwa/śmieci
+*.zip
+*.tar
+*.tar.gz
+.DS_Store
+
+# Capacitor / natywne projekty
+android/
+ios/
+.platforms/
+.electron/
+
+# Gradle / C++ cache w Android
+**/.gradle/
+**/.cxx/
+**/build/
+**/out/
+
+# Klucze (na wszelki wypadek)
+*.keystore
+*.jks

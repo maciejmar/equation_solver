@@ -1,7 +1,10 @@
 import { Component,OnInit } from '@angular/core';
-
 import { FormBuilder, FormGroup, FormArray,  FormControl, AbstractControl,  Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { ApiService } from '../api.service';
+
+import { AdMob, BannerAdSize, BannerAdPosition } from '@capacitor-community/admob';
+import type { BannerAdOptions } from '@capacitor-community/admob';
+
 @Component({
   selector: 'app-matrix',
   templateUrl: './matrix.component.html',
@@ -46,6 +49,7 @@ export class MatrixComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private fbuilder:FormBuilder,  private formb: FormBuilder, private formbOrdinates: FormBuilder,
      private apiService: ApiService) {
+      this.showBannerAd();
     
   }
 
@@ -307,6 +311,20 @@ export class MatrixComponent implements OnInit {
   hidePreviewOnly(): void {
       this.showPreview = false;
   }
+
+  async showBannerAd(): Promise<void> {
+    const options: BannerAdOptions = {
+      adId: 'ca-app-pub-3940256099942544/6300978111', // ✅ TEST BANNER AD ID
+      adSize: BannerAdSize.BANNER, // ✅ FIXED: Use enum
+      position: BannerAdPosition.BOTTOM_CENTER, // ✅ FIXED: Use correct enum
+      margin: 0,
+      isTesting: true, // ✅ ENABLE TEST MODE
+    };
+
+    await AdMob.showBanner(options);
+    console.log("Test banner ad displayed!");
+  }
+  
 }
 
 

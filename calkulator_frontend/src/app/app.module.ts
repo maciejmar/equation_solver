@@ -9,7 +9,14 @@ import { ApiService } from './api.service';
 import { MatrixComponent } from './matrix/matrix.component';
 import { NavComponent } from './nav/nav.component'; // Your API service
 import { FormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
 
+const routes: Routes = [
+  { path: 'web', component: MatrixComponent },          // strona startowa z formularzem
+  { path: 'solve', component: EquationSolverComponent },// jeśli masz osobną podstronę
+  { path: '', redirectTo: 'web', pathMatch: 'full' },   // domyślnie na /web
+  { path: '**', redirectTo: 'web' }                     // 404 -> /web
+];
 
 @NgModule({
   declarations: [
@@ -19,6 +26,12 @@ import { FormsModule } from '@angular/forms';
     NavComponent
   ],
   imports: [
+
+    RouterModule.forRoot(routes, {
+      useHash: true,
+      initialNavigation: 'enabledBlocking',
+      scrollPositionRestoration: 'enabled'
+    }),
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule, 
