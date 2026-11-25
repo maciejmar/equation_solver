@@ -36,6 +36,6 @@ jobs:
           cat "$RUNNER_TEMP/angular-tests.log"
           cat "$RUNNER_TEMP/angular-tests.log" >> "$GITHUB_STEP_SUMMARY"
           if [ "$result" -ne 0 ]; then
-            python -c 'import pathlib,sys; lines=pathlib.Path(sys.argv[1]).read_text().splitlines()[-12:]; message=" | ".join(lines).replace("%", "%25").replace("::", "%3A%3A"); print("::error title=Angular test failure details::" + message)' "$RUNNER_TEMP/angular-tests.log"
+            python -c 'import pathlib,sys; lines=pathlib.Path(sys.argv[1]).read_text().splitlines()[-80:]; message=" | ".join(lines).replace("%", "%25").replace("::", "%3A%3A"); print("::error title=Angular test failure details::" + message)' "$RUNNER_TEMP/angular-tests.log"
           fi
           exit "$result"

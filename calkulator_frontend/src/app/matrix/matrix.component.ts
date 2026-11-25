@@ -454,21 +454,27 @@ afterBlur(name: string): void {
 }
 
   submitOrdinatesForm(): void {
-  const ordinatesData = this.ordinatesForm.value;
-  Object.keys(ordinatesData).forEach(key => {
-    ordinatesData[key] = ordinatesData[key] !== '' ? parseFloat(ordinatesData[key]) : null;
-  });
+  const matrix = this.getMatrixFromForm();
+  const ordinates = this.getVectorFromForm();
 
-  if (this.ordinatesForm.valid && this.okToCompleteOrdinatesForm) {
-    this.matrixForm.enable();
-    this.okToCompleteOrdinatesForm = false;
-    this.okToCompleteMatrixForm = true;
+  if (!this.ordinatesForm.valid || !this.okToCompleteOrdinatesForm || matrix === null || ordinates === null) {
+    this.matrixForm.markAllAsTouched();
+    this.ordinatesForm.markAllAsTouched();
+    return;
   }
 
-  // <<< NOWE >>>
+  const ordinatesData: any = { matrix };
+  ordinates.forEach((value, index) => {
+    ordinatesData[`ordin${index}`] = value;
+  });
+
+  this.matrixForm.enable();
+  this.okToCompleteOrdinatesForm = false;
+  this.okToCompleteMatrixForm = true;
+
   this.isSolving = true;
   this.showEditor = false;
-  this.results = [];               // wyczyść stare
+  this.results = [];
   this.cdr.detectChanges();
 
   this.apiService.postOrdinatesData(ordinatesData).subscribe({
