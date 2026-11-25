@@ -11,6 +11,7 @@
 key.properties
 keystore.properties
 secrets.properties
+equation_solver/equation_solver/local_settings.py
 **/google-services.json
 **/local.properties
 
