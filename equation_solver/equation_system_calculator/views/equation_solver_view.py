@@ -58,13 +58,6 @@ class EquationSolver(APIView):
       except LinAlgError as e:
             return Response({'error is now in except matrixSolver': str(e)}, status=400)  
         
-      cache.set('matrix_data', matrix, timeout=300)  # Store matrix data for 5 minutes
-
-      print('Constructed matrix:', matrix)
-      #cache.set('matrix_data', matrix, timeout=300)
-
-      m = cache.get('matrix_data')
-      print('m in get of cache is:', m)
       dataRes = {'result': "we are in equation_solver"}
       return JsonResponse(dataRes)
         
