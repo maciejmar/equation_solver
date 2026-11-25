@@ -11,8 +11,8 @@ input::-webkit-inner-spin-button {
 }
 input {
   background-color: rgba(125, 138, 167, 1);
-  font-size: 1rem; 
-  padding: 0.5em; 
+  font-size: 1rem;
+  padding: 0.5em;
   border: 1px solid #ccc;
 }
 
@@ -48,7 +48,7 @@ input {
   flex-direction:row;
 }
 
-.formWithButton { 
+.formWithButton {
   font-size: 1rem;
 }
 
@@ -76,7 +76,7 @@ input {
 }
 .form-profile{
   width: 30%;
-  
+
 }
 
 .form-matrix{
@@ -91,7 +91,7 @@ input {
 }
 .ordinates-direction{
   flex-direction:column;
-  
+
 }
 
 .form-ordinates{
@@ -102,7 +102,7 @@ input {
     display: flex;
     align-content: center;
   }
-  
+
   .cell-input{
     font-size:1em;
   }
@@ -114,21 +114,21 @@ input {
   .ordinates-cell{
     background-color: rgba(19, 102, 128, 0.89);
   }
- 
+
   .buttonwidth{
     width:50%;
   }
 
-  .error-message{ 
-    
+  .error-message{
+
     color:rgb(155, 8, 8);
-    background-color: chocolate; 
+    background-color: chocolate;
     }
-    
+
   .error-placeholder {
-    height: 20px; 
+    height: 20px;
     visibility: hidden;
-  
+
   }
   .results{
     color:rgb(226, 210, 190);
@@ -148,17 +148,17 @@ input {
     color:rgb(175, 132, 75);
     display:flex;
   }
-  
+
 
   .buttonsMargin{
-    margin-top:1%; 
+    margin-top:1%;
   }
 
   .plusSign{
     color:rgb(224, 149, 224);
     font-size:1.5em;
     display: flex;
-    
+
   }
   .equalSign{
     color:rgb(224, 149, 224);
@@ -214,7 +214,7 @@ input{
 .solution_elements{
  display:flex;
  flex-direction:column;
- align-items: flex-start; 
+ align-items: flex-start;
 }
 
 /* Floating preview window styling */
@@ -246,4 +246,730 @@ input{
       font-size: 1.2em;
       padding: 8px 15px;
   }
+}
+
+
+/* brak scrolli i ciaśniejszy layout */
+.matrix-wrap {
+  overflow: visible;     /* żadnych suwaków */
+  padding: .25rem;
+  max-width: 100%;
+}
+
+.matrix {
+  --cols: 3;
+  display: grid;
+  /* kolumny mieszczą się w 100% szerokości ekranu */
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr)) minmax(0, 1fr);
+  gap: 6px;              /* mniejsze odstępy */
+  width: 100%;
+}
+
+.cell-wrap,
+.rhs-wrap {
+  position: relative;
+}
+
+.cell-input,
+.rhs {
+  width: 100%;
+  box-sizing: border-box;
+  padding: .35rem .65rem;
+  font-size: clamp(.80rem, 1.8vw, .95rem);
+  line-height: 1.2;
+  text-align: center;
+  border: 1px solid #cfd6e4;
+  border-radius: .5rem;
+  background-color: #0b2239;
+}
+
+/* Etykieta x1/x2/x3 przy każdej komórce */
+.var-badge {
+  position: absolute;
+  top: 2px;
+  right: 6px;
+  font-size: .75em;
+  opacity: .7;
+  pointer-events: none;
+}
+
+/* Ostatnia kolumna – wyrazy wolne */
+.rhs {
+  border-left: 2px solid #9aa6c1; /* separator pionowy */
+  padding-left: .75rem;
+  background-color: #4b6f8d;
+}
+.rhs-wrap::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: 600;
+  opacity: .9;
+}
+
+/* Puls i oznaczanie błędów */
+.invalid-mark {
+  border-color: rgba(255, 145, 0, 0.85) !important;
+  background-color: rgba(255, 171, 64, 0.18) !important;
+}
+
+@keyframes blinkOrange {
+  0%   { box-shadow: 0 0 0 0 rgba(255,145,0,0.35); }
+  50%  { box-shadow: 0 0 0 6px rgba(255,145,0,0.15); }
+  100% { box-shadow: 0 0 0 0 rgba(255,145,0,0.0); }
+}
+.invalid-blink {
+  animation: blinkOrange 0.9s ease;
+}
+
+/* Przyciski pod siatką */
+.buttons-row {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  margin-top: .5rem;
+}
+
+/* (opcjonalnie) dopasowanie pod mobil */
+@media (max-width: 480px) {
+  .matrix { gap: 4px; }
+  .cell-input, .rhs { padding: .3rem .55rem; font-size: clamp(.78rem, 2.5vw, .9rem); }
+}
+/* --- USTAWIENIA OGÓLNE --- */
+.matrix-wrap { overflow: visible; padding: .25rem; max-width: 100%; }
+
+.matrix {
+  --cols: 3;
+  --h: 2.2rem;               /* wspólna wysokość */
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr)) minmax(0, 1fr);
+  gap: 6px;
+  width: 100%;
+}
+
+/* --- KOMÓRKI I KAPSULKI --- */
+.cell-wrap, .rhs-wrap {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+.cell-input, .rhs {
+  height: var(--h);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 .65rem;
+  font-size: clamp(.80rem, 1.8vw, .95rem);
+  line-height: 1;
+  text-align: center;
+  border: 1px solid #cfd6e4;
+  border-radius: .55rem;
+  background: #fff;
+}
+
+.pill {
+  height: var(--h);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 .6rem;
+  border: 1px solid #cfd6e4;
+  border-radius: .55rem;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* x1, x2, ... */
+.pill.var {
+  background: #f3f6fc;
+  border-color: #c8d1e6;
+  font-weight: 600;
+}
+
+/* plus między kolumnami */
+.pill.plus {
+  background: #f8fafc;
+  border-color: #d7e0ec;
+  opacity: .9;
+}
+
+/* RHS (wyrazy wolne) – inny kolor */
+.rhs {
+  background: #f2fbff;
+  border-color: #a8d8f0;
+}
+
+/* "=" w kapsułce przed RHS */
+.pill.eq {
+  background: #eaf6ff;
+  border-color: #a8d8f0;
+  font-weight: 700;
+}
+
+/* --- WALIDACJA / PULS --- */
+.invalid-mark {
+  border-color: rgba(255, 145, 0, 0.85) !important;
+  background-color: rgba(255, 171, 64, 0.18) !important;
+}
+@keyframes blinkOrange {
+  0%   { box-shadow: 0 0 0 0 rgba(255,145,0,0.35); }
+  50%  { box-shadow: 0 0 0 6px rgba(255,145,0,0.15); }
+  100% { box-shadow: 0 0 0 0 rgba(255,145,0,0.0); }
+}
+.invalid-blink { animation: blinkOrange 0.9s ease; }
+
+/* --- PRZYCISKI: JEDNAKOWA SZEROKOŚĆ --- */
+.buttons-row {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  margin-top: .5rem;
+}
+.btn-equal {
+  min-width: 190px;        /* ten sam rozmiar obu */
+  width: 190px;
+  text-align: center;
+}
+
+/* mobil ciaśniej */
+@media (max-width: 480px) {
+  .matrix { gap: 4px; }
+  .cell-input, .rhs { padding: 0 .55rem; font-size: clamp(.78rem, 2.5vw, .9rem); }
+  .btn-equal { min-width: 160px; width: 160px; }
+}
+
+.matrix { --cols: 3; display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)) minmax(0, 1fr); gap: 6px; }
+.cell-wrap, .rhs-wrap { display: flex; align-items: center; gap: .35rem; }
+.cell-input, .rhs { height: 2.2rem; width: 100%; box-sizing: border-box; padding: 0 .65rem;
+  font-size: clamp(.80rem, 1.8vw, .95rem); line-height: 1; text-align: center; border: 1px solid #cfd6e4; border-radius: .55rem; background: #fff; }
+
+.pill { height: 2.2rem; display: inline-flex; align-items: center; justify-content: center;
+  padding: 0 .6rem; border: 1px solid #37496d; border-radius: .55rem; line-height: 1; white-space: nowrap; user-select: none; }
+.pill.var  { background: #f3f6fc; border-color: #486fcc; font-weight: 600; }
+.pill.plus { background: #f8fafc; border-color: #406aa0; opacity: .9; }
+.pill.eq   { background: #eaf6ff; border-color: #a8d8f0; font-weight: 700; }
+
+/* RHS inny kolor */
+.rhs { background: #f2fbff; border-color: #a8d8f0; }
+
+/* Walidacja / puls */
+.invalid-mark { border-color: rgba(255,145,0,.85)!important; background-color: rgba(240, 151, 92, 0.18)!important; }
+@keyframes blinkOrange { 0%{box-shadow:0 0 0 0 rgba(243, 212, 170, 0.35);} 50%{box-shadow:0 0 0 6px rgba(255,145,0,.15);} 100%{box-shadow:0 0 0 0 rgba(238, 169, 79, 0);} }
+.invalid-blink { animation: blinkOrange .9s ease; }
+
+/* Przyciski o jednakowej szerokości */
+.buttons-row { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.5rem; }
+.btn-equal { min-width:190px; width:190px; text-align:center; }
+@media (max-width:480px){ .btn-equal{min-width:160px; width:160px;} .matrix{gap:4px;} .cell-input,.rhs{padding:0 .55rem;} }
+
+
+/* tablet */
+@media (max-width: 1024px) {
+  .matrix { gap: 5px; }
+  .cell-input, .rhs {
+    height: 2rem;
+    font-size: clamp(.78rem, 1.6vw, .95rem);
+    padding: 0 .55rem;
+  }
+  .pill { height: 2rem; padding: 0 .5rem; font-size: .9em; }
+}
+
+/* mobile (telefon) */
+@media (max-width: 680px) {
+  .matrix { gap: 3px; }
+
+  /* pola są niższe, font skaluje się do szerokości ekranu */
+  .cell-input, .rhs {
+    height: 1.9rem;
+    font-size: clamp(.70rem, 3.2vw, .85rem);
+    padding: 0 1.6rem 0 .55rem; /* miejsce na xj wewnątrz po prawej */
+  }
+  .pill { height: 1.9rem; padding: 0 .4rem; font-size: .85em; }
+
+  /* x1/x2... przenosimy DO ŚRODKA inputa po prawej, bez zabierania szerokości */
+  .cell-wrap { position: relative; }
+  .pill.var {
+    position: absolute;
+    right: 4px; top: 50%; transform: translateY(-50%);
+    border: none; background: transparent; opacity: .65;
+    padding: 0; pointer-events: none;
+  }
+
+  /* plusy chowamy – zabraknie na nie sensownego miejsca */
+  .pill.plus { display: none; }
+
+  /* "=" w środku pola wyrazu wolnego – po lewej */
+  .rhs-wrap { position: relative; }
+  .pill.eq {
+    position: absolute;
+    left: 4px; top: 50%; transform: translateY(-50%);
+    border: none; background: transparent; font-weight: 700; opacity: .75;
+    padding: 0; pointer-events: none;
+  }
+  .rhs { padding-left: 1.2rem; } /* miejsce na "=" w środku */
+}
+
+/* bardzo małe telefony */
+@media (max-width: 400px) {
+  .cell-input, .rhs {
+    height: 1.8rem;
+    font-size: clamp(.66rem, 3.6vw, .80rem);
+  }
+}
+
+/* Przyciski: identyczna szerokość na desktopie, a na mobile 50/50 */
+.buttons-row { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .5rem; }
+.btn-equal { min-width: 190px; width: 190px; text-align: center; }
+
+@media (max-width: 680px) {
+  .btn-equal { min-width: 0; width: calc(50% - .25rem); }
+}
+
+/* Nagłówek x1..xn i b */
+.matrix-header {
+  --cols: 3;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr)) minmax(0, 1fr);
+  gap: 6px;
+  margin-bottom: .4rem;
+}
+
+.head-cell {
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 .6rem;
+  border: 1px solid #cfd6e4;
+  border-radius: .55rem;
+  font-weight: 600;
+  background: #40adc9;
+  background-color: #0b2239;
+}
+.head-cell.head-b {
+  background: #295f88;
+  border-color: #a8d8f0;
+}
+
+/* Grid i komórki (bez kapsułek) – pozostają jak miałeś */
+.matrix { --cols: 3; display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)) minmax(0, 1fr); gap: 6px; width: 100%; }
+.cell-wrap { display: flex; align-items: center; }
+.cell-input, .rhs, .head-input {
+  height: 2.2rem; width: 100%; box-sizing: border-box; padding: 0 .65rem;
+  font-size: clamp(.80rem, 1.8vw, .95rem); line-height: 1; text-align: center;
+  border: 1px solid #ecebaf; border-radius: .55rem; background: #2f64aa;
+}
+.rhs { background: #f2fbff; border-color: #a8d8f0; }
+
+/* Walidacja / puls – jak wcześniej */
+.invalid-mark { border-color: rgba(255,145,0,.85)!important; background-color: rgba(255,171,64,.18)!important; }
+@keyframes blinkOrange { 0%{box-shadow:0 0 0 0 rgba(255,145,0,.35);} 50%{box-shadow:0 0 0 6px rgba(255,145,0,.15);} 100%{box-shadow:0 0 0 0 rgba(255,145,0,0);} }
+.invalid-blink { animation: blinkOrange .9s ease; }
+
+/* Przyciski – identyczna szerokość */
+.buttons-row { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.5rem; }
+.btn-equal { min-width:190px; width:190px; text-align:center; }
+
+/* Responsywność – header też się skaluje */
+@media (max-width: 680px) {
+  .matrix-header { gap: 3px; }
+  .head-cell    { height: 1.9rem; padding: 0 .45rem; font-size: .9em; }
+  .matrix       { gap: 3px; }
+  .cell-input, .rhs { height: 1.9rem; font-size: clamp(.70rem, 3.2vw, .85rem); padding: 0 .55rem; }
+  .btn-equal { min-width: 0; width: calc(50% - .25rem); }
+}
+
+.matrix-head-row {
+  --cols: 3;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr)) minmax(0, 1fr);
+  gap: 6px;
+  margin-bottom: .4rem;
+
+}
+/* kolor nagłówka A */
+.head-input {
+  background-color: #95a7cc;
+  border-color: #2a0758;
+  font-weight: 600;
+}
+
+/* kolor nagłówka b = jak RHS */
+.head-input.rhs-head {
+  background: #73a3c9;
+  border-color: #228ec4;
+}
+@media (max-width: 680px) {
+  .matrix-head-row { gap: 3px; }
+  .head-input { height: 1.9rem; font-size: clamp(.70rem, 3.2vw, .85rem); padding: 0 .55rem;background-color: #1d59cf; }
+  .matrix { gap: 3px; }
+  .cell-input, .rhs { height: 1.9rem; font-size: clamp(.70rem, 3.2vw, .85rem); padding: 0 .55rem; }
+}
+@media (max-width: 400px) {
+  .head-input, .cell-input, .rhs { height: 1.8rem; font-size: clamp(.66rem, 3.6vw, .80rem); }
+}
+/* Wspólna wysokość dla wszystkich komórek */
+:host { --h: 2.2rem; }
+
+/* Nagłówek 1:1 jak grid danych */
+.matrix-head-row {
+  --cols: 3;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr)) minmax(0, 1fr);
+  gap: 6px;
+  margin-bottom: .4rem;
+}
+
+/* Baza komórki – używana i w nagłówku, i w inputach */
+.cell {
+  height: var(--h);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 .65rem;
+  font-size: clamp(.80rem, 1.8vw, .95rem);
+  line-height: 1;
+  text-align: center;
+  border: 1px solid #5872a7;
+  border-radius: .55rem;
+  background: #ebe0af;
+}
+
+/* Inputy danych (masz już class="cell cell-input") */
+
+
+/* RHS (zarówno w nagłówku jak i w danych) – JEDEN wygląd i jedna szerokość */
+.rhs {
+  background: #a3b6be;
+  border-color: #a8d8f0;
+}
+
+/* Nagłówek: nieedytowalny wygląd, bez wpływu na wymiary */
+.head-cell {
+  background-color: #9da5b4;
+  border-color: #9b8faa;
+  font-weight: 600;
+  user-select: none;
+  pointer-events: none; /* nie da się kliknąć/focusować */
+}
+
+/* Responsywność – header skaluje się tak samo jak dane */
+@media (max-width: 680px) {
+  :host { --h: 1.9rem; }
+  .matrix-head-row { gap: 3px; }
+  .cell { font-size: clamp(.70rem, 3.2vw, .85rem); padding: 0 .55rem; }
+}
+@media (max-width: 400px) {
+  :host { --h: 1.8rem; }
+  .cell { font-size: clamp(.66rem, 3.6vw, .80rem); }
+}
+
+
+
+/* Ten sam grid w nagłówku i w danych */
+.matrix-head-row,
+.matrix {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr)) minmax(0, 1fr);
+  gap: 6px;
+}
+
+/* Wspólna baza pudełka */
+.cell {
+  height: 2.2rem;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 .65rem;
+  font-size: clamp(.80rem, 1.8vw, .95rem);
+  line-height: 1;
+  text-align: center;
+  border: 1px solid #5f7ab1;
+  border-radius: .55rem;
+  background: #fff;
+}
+
+/* Kolorystyka RHS – ta sama dla nagłówka i danych */
+.rhs {
+  background: #bcc2a1;
+  border-color: #556b75;
+}
+
+/* Nagłówek tylko kolory/weight, bez zmiany wymiarów */
+.head-cell {
+  background: #75b5b8;
+  border-color: #4273e7;
+  font-weight: 600;
+  user-select: none;
+  pointer-events: none; /* etykiety nieedytowalne */
+}
+
+/* Ujednolicenie wielkości/odstępów */
+:host { --h: 2.2rem; --gap: 6px; }
+
+.matrix-head-row,
+.matrix { gap: var(--gap); }
+
+/* --- Kontrolki degree + Enter w tym samym układzie co macierz --- */
+.matrix-controls {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr)) minmax(0, 1fr);
+  gap: var(--gap);
+  margin-bottom: var(--gap);
+}
+
+/* Form nie dodaje pudełka – dzieci stają się elementami grida */
+.matrix-controls .control-form { display: contents; }
+
+/* Wygląd „komórki” – ten sam co reszta (klasa .cell już masz) */
+.cell {
+  height: var(--h);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 .65rem;
+  font-size: clamp(.80rem, 1.8vw, .95rem);
+  line-height: 1;
+  text-align: center;
+  border: 1px solid #6b93e2;
+  border-radius: .55rem;
+  background: #e4e0d0;
+}
+
+/* Przycisk jako komórka */
+.btn-as-cell {
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600;
+  background: #e6e7b6;       /* możesz zmienić, jeśli chcesz ciemniej/jasniej */
+  border: 1px solid #5e91b3;
+  cursor: pointer;
+}
+
+/* Kolumny: degree w kolumnie 1, Enter w kolumnie 2 */
+.control-degree { grid-column: 1; background-color: #553e5f; color:#ebe0af;}
+.control-enter  { grid-column: 2; }
+
+/* Mobile – zachowaj spójność wysokości i odstępów */
+@media (max-width: 680px) {
+  :host { --h: 1.9rem; }
+  .cell, .btn-as-cell { font-size: clamp(.70rem, 3.2vw, .85rem); padding: 0 .55rem; }
+  .matrix-controls { gap: var(--gap); margin-bottom: var(--gap); }
+}
+:host { --gap: 6px; }
+
+/* Baner z płynnym przejściem tonalnym */
+.top-banner {
+  width: auto;
+  margin: 5 5 var(--gap);
+  padding: clamp(.6rem, 1.8vw, 1rem);
+  border-radius: .75rem;
+  background: linear-gradient(90deg, #8ec5fc 0%, #e0c3fc 50%, #f9e2ae 100%);
+  color: #0b2239;
+  box-shadow: 0 6px 20px rgba(0,0,0,.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Tekst banera – ładne skalowanie na mobile/desktop */
+.banner-text {
+  margin: 2%;
+  font-size: clamp(.95rem, 2.2vw, 1.25rem);
+  line-height: 1.25;
+  font-weight: 600;
+}
+.banner-text span {
+  font-weight: 500;
+  opacity: .95;
+}
+
+/* przycisk zachowuje się jak „kafelek” */
+.btn-as-cell {
+  position: relative;
+  overflow: visible;               /* bąbelki mogą wychodzić poza przycisk */
+  cursor: pointer;
+  user-select: none;
+  transition: transform 80ms ease, box-shadow 80ms ease, filter 80ms ease;
+  box-shadow: 0 6px 16px rgba(0,0,0,.10);
+  touch-action: manipulation;      /* mobile: brak opóźnienia */
+}
+
+.btn-as-cell.pressed {
+  transform: translateY(2px) scale(0.985);            /* „zapadnięcie” */
+  box-shadow: inset 0 2px 6px rgba(0,0,0,.18), 0 2px 0 rgba(0,0,0,.06);
+  filter: saturate(1.02);
+}
+
+/* bąbelki */
+.bubble {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  pointer-events: none;
+  background:
+    radial-gradient(closest-side, rgba(245, 166, 166, 0.95), rgba(223, 217, 233, 0.55))
+    ,linear-gradient(180deg, rgba(150, 60, 60, 0.9), rgba(26, 87, 92, 0.5));
+  box-shadow: 0 2px 6px rgba(116, 67, 67, 0.15);
+  animation: bubble-pop .65s ease-out forwards;
+  transform: translate(0,0) scale(var(--scale, 1));
+  will-change: transform, opacity;
+  mix-blend-mode: screen;
+}
+
+/* lot bąbelków */
+@keyframes bubble-pop {
+  0%   { opacity: .95; transform: translate(0,0) scale(var(--scale, 1)); }
+  70%  { opacity: .6;  transform: translate(var(--dx, 0), var(--dy, -22px)) scale(calc(var(--scale,1) * 1.4)); }
+  100% { opacity: 0;   transform: translate(calc(var(--dx, 0) * 1.15), calc(var(--dy, -22px) * 1.1)) scale(calc(var(--scale,1) * 1.55)); }
+}
+
+/* Baner – oddech od góry ekranu (poprawka marginesów, jak prosiłeś) */
+.top-banner { margin: 12px 12px var(--gap, 6px); }
+body { padding-top: 8px; }
+
+/* Podgląd równań */
+.equations-preview {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.55));
+  box-shadow: 0 3px 10px rgba(0,0,0,.07);
+  font-size: clamp(.90rem, 1.8vw, 1.05rem);
+  color: #0f1b2d;
+
+}
+
+.eq-line {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .45rem .65rem;           /* (wiersze, kolumny) */
+  line-height: 1.35;
+
+}
+
+.term { display: inline-flex; align-items: baseline; gap: .25rem; }
+.plus, .eq { margin: 0 .15rem; font-weight: 600; color: #334e7d; }
+
+.coeff, .rhsv { font-variant-numeric: tabular-nums; }
+.coeff.placeholder, .rhsv.placeholder { opacity: .65; font-style: italic; }
+
+.var sub, .coeff sub, .rhsv sub { font-size: .8em; line-height: 0; }
+
+/* podgląd w trybie wyników – trochę ciaśniej u góry */
+.equations-preview.compact {
+  margin-top: .25rem;
+}
+
+/* panel wyników */
+.solution-panel {
+  margin-top: .5rem;
+  padding: .6rem .8rem;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 10px;
+  background: #f5c5c5;
+  box-shadow: 0 3px 10px rgba(0,0,0,.06);
+  color: #0f1b2d;
+}
+.solution-title {
+  font-weight: 700;
+  margin-bottom: .35rem;
+}
+.solution-row {
+  font-size: clamp(.95rem, 2.1vw, 1.1rem);
+  line-height: 1.4;
+}
+.solution-row .num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Szybkie wprowadzanie danych */
+.data-entry-tools {
+  margin: .35rem 0 .65rem;
+  padding: .65rem .75rem;
+  border: 1px solid rgba(66, 115, 231, .25);
+  border-radius: .7rem;
+  background: rgba(255, 255, 255, .62);
+}
+
+.input-hint {
+  margin: 0 0 .5rem;
+  color: #223653;
+  font-size: clamp(.78rem, 1.8vw, .92rem);
+  line-height: 1.35;
+}
+
+.entry-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+
+.entry-action {
+  min-height: 2rem;
+  padding: .35rem .7rem;
+  border: 1px solid #5f7ab1;
+  border-radius: .5rem;
+  background: #eef4ff;
+  color: #18355f;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.entry-action:hover,
+.entry-action:focus-visible {
+  background: #dce9ff;
+  outline: 2px solid rgba(66, 115, 231, .38);
+  outline-offset: 1px;
+}
+
+.entry-action.danger {
+  border-color: #9b6670;
+  background: #fff2f3;
+  color: #71313d;
+}
+
+.paste-status {
+  min-height: 1.2em;
+  color: #285e43;
+  font-size: .82rem;
+  font-weight: 600;
+}
+
+.matrix .cell {
+  font-variant-numeric: tabular-nums;
+  transition: border-color 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+}
+
+.matrix .cell:focus {
+  position: relative;
+  z-index: 2;
+  border-color: #245fd6;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(36, 95, 214, .22);
+  background: #fff;
+}
+
+.matrix .rhs:focus {
+  background: #f7ffe8;
+}
+
+.matrix .cell:disabled {
+  color: #52606d;
+  opacity: .72;
+  cursor: not-allowed;
+}
+
+@media (max-width: 680px) {
+  .data-entry-tools { padding: .55rem .6rem; }
+  .input-hint { margin-bottom: .4rem; }
+  .entry-action { flex: 1 1 auto; }
+  .paste-status { flex-basis: 100%; }
 }

@@ -1,108 +1,244 @@
+<div class="top-banner" role="banner">
+  <p class="banner-text">
+    <strong>Solving the system of equations.</strong>
+    <span> Input the degree between 2-7.</span>
+  </p>
+</div>
+
 <div class="forms-container">
-    <div class="floating-preview" *ngIf="showPreview" [ngStyle]="{'top': previewPositionY + 'px', 'left': previewPositionX + 'px'}">
-        <span class="preview-text">{{ previewValue }}</span>
-    </div>
-    <div class="form-profile">
-        <form  [formGroup]="profileForm" (ngSubmit)="onSubmit1()" class="profile" novalidate >
-            <label name= "degree"></label>
-            <input type="tel"    
-                   formControlName = "degree" 
-                   name="degree" 
-                   class ="form-control round" 
-                   (input)="updatePreview($event, 'degree')"
-                   placeholder="degree 2-7">
-          
-            <div *ngIf="profileForm?.touched && profileForm?.errors?.['expressionInvalid']"
-                  class="alert alert-danger">
-                         degree must be an integer between 2 and 7
-            </div>
-         
-            <button [disabled]="profileForm.invalid" class="btn btn-secondary button_profile">Enter</button>
-        </form>
+  <!-- Podgląd aktywnej komórki -->
+  <div
+    class="floating-preview"
+    *ngIf="showPreview && previewValue != null && (previewValue + '').trim() !== ''"
+    [ngStyle]="{ top: previewPositionY + 'px', left: previewPositionX + 'px' }"
+  >
+    <span class="preview-text">{{ previewValue }}</span>
+  </div>
+
+  <!-- TRYB EDYCJI (macierz i przyciski Submit/See result) -->
+  <ng-container *ngIf="showEditor">
+    <!-- Kontrolki degree + Enter -->
+    <div class="matrix-controls" [ngStyle]="{'--cols': (cols.length || degree || 3)}">
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit1()" class="control-form" novalidate>
+        <input
+          type="number"
+          inputmode="numeric"
+          min="2"
+          max="7"
+          formControlName="degree"
+          class="cell cell-input control-degree"
+          placeholder="degree 2-7"
+          aria-label="Number of equations, from 2 to 7"
+          (focus)="selectFieldContent($event)"
+          (input)="updatePreview($event, 'degree')"
+        >
+
+        <button
+          type="submit"
+          class="cell btn-as-cell control-enter"
+          [class.pressed]="isEnterPressed"
+          (mousedown)="onEnterDown($event); popBubbles($event); playPressSound()"
+          (mouseup)="onEnterUp()"
+          (mouseleave)="onEnterUp()"
+          (touchstart)="onEnterDown($event); popBubbles($event); playPressSound()"
+          (touchend)="onEnterUp()"
+        >
+          Enter degree
+          <span
+            class="bubble"
+            *ngFor="let b of bubbles"
+            [ngStyle]="{
+              left: b.x + 'px',
+              top: b.y + 'px',
+              '--dx': b.dx + 'px',
+              '--dy': b.dy + 'px',
+              '--scale': b.scale
+            }"
+          ></span>
+        </button>
+      </form>
     </div>
 
-    
-
-    <div *ngIf="profileForm.value && profileForm.dirty" class="form-matrix matrix-direction" >
-        <form [formGroup]="matrixForm" (ngSubmit)="submitMatrixForm()">
-            
-                <div *ngFor="let row of rows; let i = index" class="matrix-row">
-                    <div *ngFor="let col of cols; let j = index" class="matrix-cell">
-                        <div class="cell-container">
-                            <input  type="tel"
-                                    [formControlName]="'cell' + i + '_' + j" 
-                                    class="cell-input"
-                                    id="cell"
-                                    (blur)="onFieldBlur('cell' + i + '_' + j)"
-                                    (input)="updatePreview($event, 'cell' + i + '_' + j)"
-                                    required>
-                            <span>
-                              <label for="cell" class="badge bg-secondary bgcell" > x{{j+1}}</label>
-                            </span>
-                            <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']" class="error-message"> 
-                                <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.touched && matrixForm.get('cell' + i + '_' + j)?.errors?.['expressionInvalid']"
-                                  class="alert alert-danger">
-                                    Numbers only!
-                                </div>
-                                <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['required']">Cell is required.</div>
-                                <div *ngIf="matrixForm.get('cell' + i + '_' + j)?.errors?.['pattern']">Only numbers are allowed!</div>
-                            </div>
-                           
-                            <div [class]="j < cols.length - 1 ? 'plusSign' : 'plusSign hiddenPlus'">+</div>
-                            
-                            <!--<div *ngIf="j < degree-1 " class="plusSign">+</div>-->
-                        </div>
-                    </div> <span class="equalSign">=</span> 
-                </div>
-                <div *ngIf="matrixForm.errors?.['backend']" class="alert alert-dark error-message" role="alert" >
-                    {{ matrixForm.errors?.['backend'] }}
-                </div>
-                <button *ngIf="matrixForm.dirty && matrixForm.valid" 
-                        [disabled]="matrixForm.invalid && (!this.okToCompleteMatrixForm || !matrixForm.errors?.['singularMatrix'])"
-                        type="submit" 
-                        class="btn btn-primary buttonwidth buttonsMargin"
-                >Submit matrix</button>
-        </form>
-        
-            <form [formGroup]="ordinatesForm"  (ngSubmit) = "submitOrdinatesForm()" class="form-matrix ordinates-direction">  <!--form-ordinates   ordinates-row-->
-                <div *ngFor="let row of rows; let i = index" class="matrix-row" > <!--ordinates-row              form-control rounded ordinates-cell-->
-                    <div class="matrix-cell">
-                        <div class="cell-container">
-                            <div class="cell-input">
-                                
-                              <input type ="tel"   
-                                     [formControlName]="'ordin'+ i" 
-                                     class="input-ordinate" 
-                                     (input)="updatePreview($event, 'ordin' + i)"
-                                     required />
-                              <span><label class="badge bg-secondary bgcell"></label>x</span>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button *ngIf="ordinatesForm.dirty && ordinatesForm.valid && !okToCompleteMatrixForm && !matrixForm.errors?.['singularMatrix']" 
-                        type="submit" 
-                        class="btn btn-primary blink_me" 
-                        [disabled]="!this.ordinatesForm.valid"
-                >
-                  {{ this.matrixForm.errors ? 'Change matrix' : 'See result'}}    
-                </button>
-            </form>
-        
+    <div class="data-entry-tools">
+      <p class="input-hint">
+        <strong>Fast input:</strong> use Tab or Enter to move forward, arrows to navigate,
+        and paste rows copied from a spreadsheet. Decimal commas are accepted.
+      </p>
+      <div class="entry-actions">
+        <button type="button" class="entry-action" (click)="fillEmptyWithZeros()">Fill empty with 0</button>
+        <button type="button" class="entry-action danger" (click)="clearGrid()">Clear</button>
+        <span class="paste-status" aria-live="polite">{{ pasteStatus }}</span>
+      </div>
     </div>
-    
 
-    <div *ngIf="ordinatesForm.dirty && ordinatesForm.valid && 
-        matrixForm.dirty && matrixForm.valid && !matrixSingular && okToCompleteMatrixForm" class="badge text-left container">
-        <div name="response" class="solution_elements" >
-           
-            The solution is: 
-            <span *ngFor="let result of results; let i = index">
-                <div>
-                        x{{i+1}}={{result| number:'1.0-4'}}{{i < results.length - 1 ? '' : ''}}
-                </div>        
-            </span> 
+    <!-- Nagłówek macierzy -->
+    <div class="matrix-head-row" [ngStyle]="{'--cols': (cols.length || degree || 3)}">
+      <ng-container *ngFor="let __ of cols; let j = index">
+        <div class="cell head-cell" role="columnheader" [attr.aria-label]="'x' + (j + 1)">
+          x{{ j + 1 }}
         </div>
+      </ng-container>
+      <div class="cell head-cell rhs" role="columnheader" aria-label="b">b</div>
     </div>
+
+    <!-- Macierz danych -->
+    <div #matrixGrid class="matrix" [ngStyle]="{'--cols': (cols.length || degree || 3)}">
+      <ng-container *ngFor="let _ of rows; let i = index">
+        <!-- Kolumny A[i][j] -->
+        <ng-container *ngFor="let __ of cols; let j = index">
+          <ng-container [formGroup]="matrixForm">
+            <input
+              type="text" inputmode="decimal" autocomplete="off" spellcheck="false"
+              class="cell cell-input"
+              [formControlName]="'cell' + i + '_' + j"
+              [attr.data-grid-row]="i" [attr.data-grid-col]="j"
+              (focus)="selectFieldContent($event); showCellPreview($event, 'cell' + i + '_' + j, matrixForm.get('cell' + i + '_' + j)?.value)"
+              (input)="onNumericInput($event, 'cell' + i + '_' + j)"
+              (keydown)="onGridKeydown($event, i, j)"
+              (paste)="onGridPaste($event, i, j)"
+              (blur)="onFieldBlur('cell' + i + '_' + j); afterBlur('cell' + i + '_' + j)"
+              [attr.aria-label]="'Equation ' + (i + 1) + ', coefficient of x' + (j + 1)"
+              [attr.placeholder]="'a' + (i + 1) + (j + 1)"
+              [ngClass]="{
+                'invalid-mark': (matrixForm.get('cell' + i + '_' + j)?.touched && matrixForm.get('cell' + i + '_' + j)?.invalid),
+                'invalid-blink': (blinkCell === ('cell' + i + '_' + j))
+              }"
+              required
+            />
+          </ng-container>
+        </ng-container>
+
+        <!-- Wyrazy wolne b[i] -->
+        <ng-container [formGroup]="ordinatesForm">
+          <input
+            type="text" inputmode="decimal" autocomplete="off" spellcheck="false"
+            class="cell rhs"
+            [formControlName]="'ordin' + i"
+            [attr.data-grid-row]="i" [attr.data-grid-col]="cols.length"
+            (focus)="selectFieldContent($event); showCellPreview($event, 'ordin' + i, ordinatesForm.get('ordin' + i)?.value)"
+            (input)="onNumericInput($event, 'ordin' + i)"
+            (keydown)="onGridKeydown($event, i, cols.length)"
+            (paste)="onGridPaste($event, i, cols.length)"
+            (blur)="onFieldBlur('ordin' + i); afterBlur('ordin' + i)"
+            [attr.aria-label]="'Equation ' + (i + 1) + ', free term b' + (i + 1)"
+            [attr.placeholder]="'b' + (i + 1)"
+            [ngClass]="{
+              'invalid-mark': (ordinatesForm.get('ordin' + i)?.touched && ordinatesForm.get('ordin' + i)?.invalid),
+              'invalid-blink': (blinkCell === ('ordin' + i))
+            }"
+            required
+          />
+        </ng-container>
+      </ng-container>
+    </div>
+
+    <!-- Podgląd układu równań pod inputami -->
+    <div #eqPreview class="equations-preview" [style.fontSize.px]="equationFontPx" *ngIf="rows?.length && cols?.length">
+      <div class="eq-line" *ngFor="let _ of rows; let i = index">
+        <ng-container *ngFor="let __ of cols; let j = index">
+          <span class="term">
+            <span class="coeff" [class.placeholder]="!(matrixForm.get('cell' + i + '_' + j)?.value)">
+              <ng-container *ngIf="matrixForm.get('cell' + i + '_' + j)?.value as v; else symCoeff">
+                {{ v | number:'1.0-4' }}
+              </ng-container>
+              <ng-template #symCoeff> a<sub>{{ i + 1 }}{{ j + 1 }}</sub> </ng-template>
+            </span>
+            <span class="var">x<sub>{{ j + 1 }}</sub></span>
+          </span>
+          <span class="plus" *ngIf="j < cols.length - 1">+</span>
+        </ng-container>
+        <span class="eq">=</span>
+        <span class="rhsv" [class.placeholder]="!(ordinatesForm.get('ordin' + i)?.value)">
+          <ng-container *ngIf="ordinatesForm.get('ordin' + i)?.value as b; else symB">
+            {{ b | number:'1.0-4' }}
+          </ng-container>
+          <ng-template #symB> b<sub>{{ i + 1 }}</sub> </ng-template>
+        </span>
+      </div>
+    </div>
+
+    <!-- Przyciski Submit / See result -->
+    <div class="buttons-row">
+      <button
+        *ngIf="matrixForm.dirty && matrixForm.valid"
+        [disabled]="matrixForm.invalid && (!okToCompleteMatrixForm || !matrixForm.errors?.['singularMatrix'])"
+        type="button"
+        class="btn btn-primary buttonwidth buttonsMargin btn-equal"
+        (click)="submitMatrixForm()"
+      >
+        Submit matrix
+      </button>
+
+      <button
+        *ngIf="ordinatesForm.dirty && ordinatesForm.valid && !okToCompleteMatrixForm && !matrixForm.errors?.['singularMatrix']"
+        [disabled]="!ordinatesForm.valid"
+        type="button"
+        class="btn btn-primary blink_me btn-equal"
+        (click)="submitOrdinatesForm()"
+      >
+        {{ matrixForm.errors ? 'Change matrix' : 'See result' }}
+      </button>
+    </div>
+  </ng-container>
+
+  <!-- TRYB WYNIKÓW -->
+  <ng-container *ngIf="!showEditor">
+    <div #eqPreview class="equations-preview compact" [style.fontSize.px]="equationFontPx" *ngIf="rows?.length && cols?.length">
+      <div class="eq-line" *ngFor="let _ of rows; let i = index">
+        <ng-container *ngFor="let __ of cols; let j = index">
+          <span class="term">
+            <span class="coeff" [class.placeholder]="!(matrixForm.get('cell' + i + '_' + j)?.value)">
+              <ng-container *ngIf="matrixForm.get('cell' + i + '_' + j)?.value as v; else symCoeff2">
+                {{ v | number:'1.0-4' }}
+              </ng-container>
+              <ng-template #symCoeff2> a<sub>{{ i + 1 }}{{ j + 1 }}</sub> </ng-template>
+            </span>
+            <span class="var">x<sub>{{ j + 1 }}</sub></span>
+          </span>
+          <span class="plus" *ngIf="j < cols.length - 1">+</span>
+        </ng-container>
+        <span class="eq">=</span>
+        <span class="rhsv" [class.placeholder]="!(ordinatesForm.get('ordin' + i)?.value)">
+          <ng-container *ngIf="ordinatesForm.get('ordin' + i)?.value as b; else symB2">
+            {{ b | number:'1.0-4' }}
+          </ng-container>
+          <ng-template #symB2> b<sub>{{ i + 1 }}</sub> </ng-template>
+        </span>
+      </div>
+    </div>
+
+    <div class="solution-panel" *ngIf="results?.length">
+      <div class="solution-title">The solution is:</div>
+      <div class="solution-row" *ngFor="let r of results; let i = index">
+        x<sub>{{ i + 1 }}</sub> = <span class="num">{{ r | number:'1.0-6' }}</span>
+      </div>
+    </div>
+    <!-- TRYB WYNIKÓW -->
+<ng-container *ngIf="!showEditor">
+  <div #eqPreview class="equations-preview compact" [style.fontSize.px]="equationFontPx" *ngIf="rows?.length && cols?.length">
+    <!-- ... zostaje bez zmian ... -->
+  </div>
+
+  <!-- NOWE: stan liczenia -->
+  <div class="solution-panel" *ngIf="isSolving">
+    Computing the solution…
+  </div>
+
+  <!-- Pokaż wyniki, gdy przyszły liczby -->
+  <div class="solution-panel" *ngIf="!isSolving && results?.length">
+    <div class="solution-title">The solution is:</div>
+    <div class="solution-row" *ngFor="let r of results; let i = index">
+      x<sub>{{ i + 1 }}</sub> = <span class="num">{{ r | number:'1.0-6' }}</span>
+    </div>
+  </div>
+
+  <div class="buttons-row" *ngIf="!isSolving">
+    <button type="button" class="btn btn-primary btn-equal" (click)="solveNext()">Solve next</button>
+  </div>
+</ng-container>
+
+    <div class="buttons-row">
+      <button type="button" class="btn btn-primary btn-equal" (click)="solveNext()">Solve next</button>
+    </div>
+  </ng-container>
 </div>
