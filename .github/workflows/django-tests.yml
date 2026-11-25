@@ -37,4 +37,7 @@ jobs:
           result=$?
           cat "$RUNNER_TEMP/django-tests.log"
           cat "$RUNNER_TEMP/django-tests.log" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$result" -ne 0 ]; then
+            python -c 'import pathlib,sys; lines=pathlib.Path(sys.argv[1]).read_text().splitlines()[-12:]; message=" | ".join(lines).replace("%", "%25").replace("::", "%3A%3A"); print("::error title=Django test failure details::" + message)' "$RUNNER_TEMP/django-tests.log"
+          fi
           exit "$result"
