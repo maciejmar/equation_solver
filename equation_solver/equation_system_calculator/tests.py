@@ -48,3 +48,40 @@ class StatelessMatrixTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         np.testing.assert_allclose(response.data["solution"], [2.0, 1.0])
+
+    def test_legacy_two_step_requests_keep_each_clients_matrix_isolated(self):
+        factory = self.factory
+        matrix_a = {
+            "cell0_0": 2,
+            "cell0_1": 1,
+            "cell1_0": 1,
+            "cell1_1": -1,
+        }
+        matrix_b = {
+            "cell0_0": 1,
+            "cell0_1": 1,
+            "cell1_0": 1,
+            "cell1_1": -1,
+        }
+
+        EquationSolver.as_view()(factory.post(
+            "/calculator/equation_solver/",
+            matrix_a,
+            format="json",
+            HTTP_X_CSRFTOKEN="client-a-token",
+        ))
+        EquationSolver.as_view()(factory.post(
+            "/calculator/equation_solver/",
+            matrix_b,
+            format="json",
+            HTTP_X_CSRFTOKEN="client-b-token",
+        ))
+        response = OrdinatesPostView.as_view()(factory.post(
+            "/calculator/ordinates/",
+            {"ordin0": 5, "ordin1": 1},
+            format="json",
+            HTTP_X_CSRFTOKEN="client-a-token",
+        ))
+
+        self.assertEqual(response.status_code, 200)
+        np.testing.assert_allclose(response.data["solution"], [2.0, 1.0])
