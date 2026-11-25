@@ -5,9 +5,7 @@ from ..serializers import EquationSystemSerializer
 from ..own_methods.solvation import perform_calculation
 import numpy as np
 from ..own_methods.equation_solution_result import equation_result
-from django.core.cache import cache
 from numpy.linalg import LinAlgError
-from django.core.cache import cache
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
@@ -65,45 +63,30 @@ class MatrixSolver(APIView):
     
     def post(self, request, format=None):
         data = request.data
-        print('Received matrix data:', data)
-        matrix = np.array(data.get('matrix'))
         try:
-           det = np.linalg.det(matrix)
-           if np.isclose(det, 0):
-             print('this matrix is singular')  
-             dataRes= {'error': 'Matrix is singular, cannot proceed'}
-             return JsonResponse(dataRes, status=400)
-        except LinAlgError as e:
-            dataRes=  {'error is now in except matrixSolver': str(e)}
-            return  JsonResponse(dataRes, status=400)
-            
-              
-        print ('matrix before cache ')
-        print(matrix)
-        cache.set('matrix_data', matrix, timeout=300)  # Store matrix data for 5 minutes
-        print('-------------------------------- matrix =' )
-        dataRes = {'result': 'we are in equation_solver'}
-        return JsonResponse(dataRes)
+            matrix = np.asarray(data.get('matrix'), dtype=float)
+            if matrix.ndim != 2 or matrix.shape[0] == 0 or matrix.shape[0] != matrix.shape[1]:
+                raise ValueError("Matrix must be a non-empty square matrix")
+            np.linalg.solve(matrix, np.zeros(matrix.shape[0]))
+        except LinAlgError:
+            return JsonResponse({'error': 'Matrix is singular, cannot proceed'}, status=400)
+        except (TypeError, ValueError) as exc:
+            return JsonResponse({'error': str(exc)}, status=400)
+
+        return JsonResponse({'result': 'we are in equation_solver'})
 
 class OrdinatesSolver(APIView):
     
     def post(self, request, format=None):
         data = request.data
-        print('Received ordinates data:', data)
-        ordinates = np.array(data.get('ordinates'))
-        matrix = cache.get('matrix_data')  # Retrieve matrix data
-        matrix = reconstruct_vector(ordinates)
-        print ('odinates vector size is ', matrix)
-        print('********************************')
-        # Process ordinates data
-        if matrix is not None:
-            solution = equation_result(matrix, ordinates)
-            print ('I solved the equation system ->',solution)
-            dataRes = {'solution': solution}
-            return JsonResponse(dataRes)
-        else:
-            dataRes={'error': 'Ordinates data not found'}
-            return JsonResponse(dataRes,status_code=400)
+        try:
+            solution = equation_result(data.get('matrix'), data.get('ordinates'))
+        except LinAlgError:
+            return JsonResponse({'error': 'Matrix is singular, cannot proceed'}, status=400)
+        except (TypeError, ValueError) as exc:
+            return JsonResponse({'error': str(exc)}, status=400)
+
+        return JsonResponse({'solution': solution.tolist()})
        
         
 def csrf_token(request):
