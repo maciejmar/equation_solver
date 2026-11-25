@@ -1,0 +1,40 @@
+name: Django API Tests
+
+on:
+  push:
+    branches:
+      - fix/equation-solver-stateless-matrix
+    paths:
+      - equation_solver/**
+      - .github/workflows/django-tests.yml
+  pull_request:
+    paths:
+      - equation_solver/**
+      - .github/workflows/django-tests.yml
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: equation_solver
+    env:
+      DJANGO_SECRET_KEY: ci-only-test-key
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+          cache: pip
+          cache-dependency-path: equation_solver/requirements.txt
+      - name: Install backend dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Run Django API tests
+        shell: bash
+        run: |
+          set +e
+          python manage.py test equation_system_calculator > "$RUNNER_TEMP/django-tests.log" 2>&1
+          result=$?
+          cat "$RUNNER_TEMP/django-tests.log"
+          cat "$RUNNER_TEMP/django-tests.log" >> "$GITHUB_STEP_SUMMARY"
+          exit "$result"
