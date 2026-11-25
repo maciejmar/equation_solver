@@ -5,6 +5,8 @@ from ..serializers import EquationSystemSerializer
 from ..own_methods.solvation import perform_calculation
 import numpy as np
 from ..own_methods.equation_solution_result import equation_result
+from ..own_methods.request_matrix_cache import legacy_matrix_cache_key
+from django.core.cache import cache
 from numpy.linalg import LinAlgError
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -56,6 +58,10 @@ class EquationSolver(APIView):
       except LinAlgError as e:
             return Response({'error is now in except matrixSolver': str(e)}, status=400)  
         
+      cache_key = legacy_matrix_cache_key(request)
+      if cache_key:
+          cache.set(cache_key, matrix, timeout=300)
+
       dataRes = {'result': "we are in equation_solver"}
       return JsonResponse(dataRes)
         
