@@ -1,8 +1,21 @@
 apply plugin: 'com.android.application'
 
+def releaseKeystorePath = System.getenv('ANDROID_KEYSTORE_PATH')
+def releaseSigningAvailable = releaseKeystorePath != null && !releaseKeystorePath.isEmpty()
+
 android {
     namespace "com.mmarosz.calkulator"
     compileSdkVersion rootProject.ext.compileSdkVersion
+    signingConfigs {
+        if (releaseSigningAvailable) {
+            release {
+                storeFile file(releaseKeystorePath)
+                storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('ANDROID_KEY_ALIAS')
+                keyPassword System.getenv('ANDROID_KEY_PASSWORD')
+            }
+        }
+    }
     defaultConfig {
         applicationId "com.mmarosz.calkulator"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -18,6 +31,9 @@ android {
     }
     buildTypes {
         release {
+            if (releaseSigningAvailable) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

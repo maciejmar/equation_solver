@@ -1,0 +1,111 @@
+name: Android Play AAB Build
+
+on:
+  push:
+    tags:
+      - 'android-build-v*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: equation-solver-android-build-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment: play-release
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18.17.1'
+          cache: npm
+          cache-dependency-path: calkulator_frontend/package-lock.json
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Android SDK components
+        shell: bash
+        run: |
+          set -euo pipefail
+          sdk_root="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
+          sdkmanager="$sdk_root/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$sdkmanager" ]; then
+            sdkmanager="$(find "$sdk_root/cmdline-tools" -type f -name sdkmanager | sort -V | tail -n 1)"
+          fi
+          test -x "$sdkmanager"
+          set +o pipefail
+          yes | "$sdkmanager" --licenses >/dev/null
+          set -o pipefail
+          "$sdkmanager" "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Install frontend dependencies
+        working-directory: calkulator_frontend
+        run: npm ci
+
+      - name: Build Angular for production
+        working-directory: calkulator_frontend
+        run: npm run build -- --configuration=production
+
+      - name: Sync Capacitor Android project
+        working-directory: calkulator_frontend
+        run: npx cap sync android
+
+      - name: Read current Play tracks and version codes
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          PACKAGE_NAME: com.mmarosz.calkulator
+          APP_GRADLE_FILE: calkulator_frontend/android/app/build.gradle
+        run: |
+          test -n "$PLAY_SERVICE_ACCOUNT_JSON"
+          python -m pip install --disable-pip-version-check google-api-python-client
+          python .github/scripts/list_play_tracks.py
+
+      - name: Prepare upload-key file
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          set -euo pipefail
+          test -n "$ANDROID_KEYSTORE_BASE64"
+          umask 077
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > calkulator_frontend/android/app/upload-keystore.jks
+          test -s calkulator_frontend/android/app/upload-keystore.jks
+
+      - name: Build signed Android App Bundle
+        working-directory: calkulator_frontend/android
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/calkulator_frontend/android/app/upload-keystore.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          test -n "$ANDROID_KEYSTORE_PASSWORD"
+          test -n "$ANDROID_KEY_ALIAS"
+          test -n "$ANDROID_KEY_PASSWORD"
+          ./gradlew bundleRelease
+          test -s app/build/outputs/bundle/release/app-release.aab
+
+      - name: Save signed AAB build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: equation-solver-aab-${{ github.sha }}
+          path: calkulator_frontend/android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Remove upload key
+        if: always()
+        run: rm -f calkulator_frontend/android/app/upload-keystore.jks
