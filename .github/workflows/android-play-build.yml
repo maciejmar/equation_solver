@@ -102,7 +102,7 @@ jobs:
           cat "$RUNNER_TEMP/gradle-build.log"
           cat "$RUNNER_TEMP/gradle-build.log" >> "$GITHUB_STEP_SUMMARY"
           if [ "$result" -ne 0 ]; then
-            python -c 'import pathlib,sys; lines=pathlib.Path(sys.argv[1]).read_text().splitlines()[-80:]; message=" | ".join(lines).replace("%", "%25").replace("::", "%3A%3A"); print("::error title=Gradle build failure details::" + message)' "$RUNNER_TEMP/gradle-build.log"
+            python -c 'import pathlib,sys; lines=pathlib.Path(sys.argv[1]).read_text().splitlines(); keys=("e:", " error", "failure:", "failed", "what went wrong", "where:", "caused by:", "could not"); matches=[line.strip() for line in lines if any(key in line.lower() for key in keys)]; message=" | ".join(matches[-15:] or lines[-15:]).replace("%", "%25").replace("::", "%3A%3A"); print("::error title=Gradle build failure details::" + message)' "$RUNNER_TEMP/gradle-build.log"
             exit "$result"
           fi
           if [ ! -s app/build/outputs/bundle/release/app-release.aab ]; then
