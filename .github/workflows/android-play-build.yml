@@ -113,11 +113,19 @@ jobs:
             exit 1
           fi
 
+      - name: Verify R8 mapping output
+        run: |
+          mapping_file=calkulator_frontend/android/app/build/outputs/mapping/release/mapping.txt
+          test -s "$mapping_file"
+          python -c 'import pathlib,sys; lines=pathlib.Path(sys.argv[1]).read_text().splitlines(); count=sum(" -> " in line and line.rstrip().endswith(":") for line in lines); print(f"R8 obfuscated classes: {count}"); sys.exit(0 if count else "No obfuscated classes found in R8 mapping.")' "$mapping_file"
+
       - name: Save signed AAB build artifact
         uses: actions/upload-artifact@v4
         with:
           name: equation-solver-aab-${{ github.sha }}
-          path: calkulator_frontend/android/app/build/outputs/bundle/release/app-release.aab
+          path: |
+            calkulator_frontend/android/app/build/outputs/bundle/release/app-release.aab
+            calkulator_frontend/android/app/build/outputs/mapping/release/mapping.txt
           if-no-files-found: error
           retention-days: 7
 
