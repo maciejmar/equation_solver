@@ -40,6 +40,11 @@ def main():
             packageName=package_name,
             editId=edit_id,
         ).execute()
+        country_availability = publisher.edits().countryavailability().get(
+            packageName=package_name,
+            editId=edit_id,
+            track="production",
+        ).execute()
     except HttpError as exc:
         raise RuntimeError(f"Play track read failed with HTTP {exc.resp.status}") from None
     finally:
@@ -77,9 +82,21 @@ def main():
         code_state = "unused and higher than existing track codes"
 
     inventory = "; ".join(track_summaries) or "no tracks returned"
+    countries = sorted(
+        country.get("countryCode", "")
+        for country in country_availability.get("countries", [])
+        if country.get("countryCode")
+    )
+    country_summary = (
+        f"production country availability: syncWithProduction="
+        f"{country_availability.get('syncWithProduction', False)}, "
+        f"explicitCountries={len(countries)}, "
+        f"restOfWorld={country_availability.get('restOfWorld', False)}"
+    )
     message = (
         f"Play package={package_name}; source versionCode={current_code}; "
-        f"highest track versionCode={highest_code}; source code is {code_state}; {inventory}"
+        f"highest track versionCode={highest_code}; source code is {code_state}; "
+        f"{inventory}; {country_summary}"
     )
     print(f"::notice title=Play track preflight::{message}")
 
@@ -93,6 +110,7 @@ def main():
                 f"- Highest tracked versionCode: `{highest_code}`\n"
                 f"- Source code status: {code_state}\n"
                 f"- Tracks: `{inventory}`\n"
+                f"- {country_summary}\n"
             )
 
 
