@@ -26,7 +26,7 @@ jobs:
           cache: npm
           cache-dependency-path: calkulator_frontend/package-lock.json
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
@@ -92,11 +92,23 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           set -euo pipefail
+          test -n "$ANDROID_KEYSTORE_PATH"
           test -n "$ANDROID_KEYSTORE_PASSWORD"
           test -n "$ANDROID_KEY_ALIAS"
           test -n "$ANDROID_KEY_PASSWORD"
-          ./gradlew bundleRelease
-          test -s app/build/outputs/bundle/release/app-release.aab
+          set +e
+          ./gradlew bundleRelease > "$RUNNER_TEMP/gradle-build.log" 2>&1
+          result=$?
+          cat "$RUNNER_TEMP/gradle-build.log"
+          cat "$RUNNER_TEMP/gradle-build.log" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$result" -ne 0 ]; then
+            python -c 'import pathlib,sys; lines=pathlib.Path(sys.argv[1]).read_text().splitlines()[-80:]; message=" | ".join(lines).replace("%", "%25").replace("::", "%3A%3A"); print("::error title=Gradle build failure details::" + message)' "$RUNNER_TEMP/gradle-build.log"
+            exit "$result"
+          fi
+          if [ ! -s app/build/outputs/bundle/release/app-release.aab ]; then
+            echo "Gradle reported success but the AAB file is missing." >&2
+            exit 1
+          fi
 
       - name: Save signed AAB build artifact
         uses: actions/upload-artifact@v4
