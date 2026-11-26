@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'android-build-v*'
+      - 'production-v*'
 
 permissions:
   contents: read
@@ -68,6 +69,8 @@ jobs:
           PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           PACKAGE_NAME: com.mmarosz.calkulator
           APP_GRADLE_FILE: calkulator_frontend/android/app/build.gradle
+          REQUIRE_UNUSED_VERSION_CODE: ${{ startsWith(github.ref, 'refs/tags/production-v') && 'true' || 'false' }}
+          REQUIRE_ALL_COUNTRIES: ${{ startsWith(github.ref, 'refs/tags/production-v') && 'true' || 'false' }}
         run: |
           test -n "$PLAY_SERVICE_ACCOUNT_JSON"
           python -m pip install --disable-pip-version-check google-api-python-client
@@ -117,6 +120,26 @@ jobs:
           path: calkulator_frontend/android/app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
           retention-days: 7
+
+      - name: Upload 100% rollout to Google Play production
+        if: ${{ startsWith(github.ref, 'refs/tags/production-v') }}
+        uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.mmarosz.calkulator
+          releaseFiles: calkulator_frontend/android/app/build/outputs/bundle/release/app-release.aab
+          tracks: production
+          status: completed
+
+      - name: Verify production release in Play
+        if: ${{ startsWith(github.ref, 'refs/tags/production-v') }}
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          PACKAGE_NAME: com.mmarosz.calkulator
+          APP_GRADLE_FILE: calkulator_frontend/android/app/build.gradle
+          VERIFY_PLAY_TRACK: production
+          REQUIRE_ALL_COUNTRIES: 'true'
+        run: python .github/scripts/list_play_tracks.py
 
       - name: Remove upload key
         if: always()

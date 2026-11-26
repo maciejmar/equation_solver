@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdMob, BannerAdSize, BannerAdPosition } from '@capacitor-community/admob';
 import type { BannerAdOptions } from '@capacitor-community/admob';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,7 @@ export class AppComponent implements OnInit {
   async initializeAdMob(): Promise<void> {
     try {
       // Initialize AdMob first
-      await AdMob.initialize({ initializeForTesting: true });
+      await AdMob.initialize({ initializeForTesting: environment.adMobUseTestAds });
       console.log('AdMob initialized!');
       // Now show the banner ad
       await this.showBannerAd();
@@ -30,16 +31,16 @@ export class AppComponent implements OnInit {
 
   async showBannerAd(): Promise<void> {
     const options: BannerAdOptions = {
-      adId: 'ca-app-pub-3940256099942544/6300978111', // Test Banner Ad Unit ID
+      adId: environment.adMobBannerAdUnitId,
       adSize: BannerAdSize.BANNER,
       position: BannerAdPosition.BOTTOM_CENTER,
       margin: 0,
-      isTesting: true, // Set to true for testing
+      isTesting: environment.adMobUseTestAds,
     };
 
     try {
       await AdMob.showBanner(options);
-      console.log("Test banner ad displayed!");
+      console.log("Banner ad displayed!");
     } catch (error) {
       console.error("Error showing banner ad:", error);
     }

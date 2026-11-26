@@ -11,5 +11,7 @@ export const environment = {
   apiUrl:         '/api/equation_solver/',   // było: /api/calculator/equation_solver/
   apiAnotherUrl:  '/api/another_post/',
   apiOrdinatesUrl:'/api/ordinates/',
-  apiCsrfUrl:     '/api/'                    // baza dla innych wywołań
+  apiCsrfUrl:     '/api/',
+  adMobBannerAdUnitId: 'ca-app-pub-3940256099942544/6300978111',
+  adMobUseTestAds: true
 };

@@ -2,6 +2,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AdMob, BannerAdSize, BannerAdPosition } from '@capacitor-community/admob';
 import type { BannerAdOptions } from '@capacitor-community/admob';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-nav',
@@ -17,11 +18,11 @@ export class NavComponent implements OnInit, OnDestroy {
 
   async showBannerAd(): Promise<void> {
     const options: BannerAdOptions = {
-      adId: 'ca-app-pub-3940256099942544/6300978111', // Test Banner Ad Unit ID
+      adId: environment.adMobBannerAdUnitId,
       adSize: BannerAdSize.BANNER,
       position: BannerAdPosition.BOTTOM_CENTER,
       margin: 0,
-      isTesting: true,
+      isTesting: environment.adMobUseTestAds,
     };
     try {
       await AdMob.showBanner(options);

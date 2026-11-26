@@ -20,6 +20,7 @@ android {
         applicationId "com.mmarosz.calkulator"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        manifestPlaceholders = [adMobAppId: "ca-app-pub-3940256099942544~3347511713"]
         versionCode 21
         versionName "1.0.21"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -30,7 +31,11 @@ android {
         }
     }
     buildTypes {
+        debug {
+            manifestPlaceholders = [adMobAppId: "ca-app-pub-3940256099942544~3347511713"]
+        }
         release {
+            manifestPlaceholders = [adMobAppId: "ca-app-pub-9509918464023539~3601012279"]
             if (releaseSigningAvailable) {
                 signingConfig signingConfigs.release
             }

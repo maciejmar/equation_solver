@@ -93,12 +93,37 @@ def main():
         f"explicitCountries={len(countries)}, "
         f"restOfWorld={country_availability.get('restOfWorld', False)}"
     )
+    if os.environ.get("REQUIRE_UNUSED_VERSION_CODE") == "true" and code_state != "unused and higher than existing track codes":
+        error = f"Production preflight blocked: versionCode {current_code} is {code_state}."
+        print(f"::error title=Play versionCode preflight::{error}")
+        raise SystemExit(error)
+
+    if os.environ.get("REQUIRE_ALL_COUNTRIES") == "true" and not country_availability.get("restOfWorld", False):
+        error = "Production preflight blocked: rest-of-world country availability is not enabled."
+        print(f"::error title=Play country preflight::{error}")
+        raise SystemExit(error)
+
+    verify_track = os.environ.get("VERIFY_PLAY_TRACK")
+    if verify_track:
+        track = next((item for item in tracks if item.get("track") == verify_track), None)
+        verified = any(
+            release.get("status") == "completed"
+            and current_code in [int(code) for code in release.get("versionCodes", [])]
+            for release in (track or {}).get("releases", [])
+        )
+        if not verified:
+            error = f"Play readback did not find completed versionCode {current_code} on {verify_track}."
+            print(f"::error title=Play release verification::{error}")
+            raise SystemExit(error)
+
     message = (
         f"Play package={package_name}; source versionCode={current_code}; "
         f"highest track versionCode={highest_code}; source code is {code_state}; "
         f"{inventory}; {country_summary}"
     )
     print(f"::notice title=Play track preflight::{message}")
+    if verify_track:
+        print(f"::notice title=Play release verification::Verified versionCode {current_code} as completed on {verify_track}.")
 
     summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary_path:
