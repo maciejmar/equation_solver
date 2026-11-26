@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
   async initializeAdMob(): Promise<void> {
     try {
       // Initialize AdMob first
-      await AdMob.initialize();
+      await AdMob.initialize({ initializeForTesting: true });
       console.log('AdMob initialized!');
       // Now show the banner ad
       await this.showBannerAd();
