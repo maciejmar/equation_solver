@@ -18,9 +18,7 @@ describe('MatrixComponent', () => {
       imports: [ReactiveFormsModule],
       declarations: [MatrixComponent],
       providers: [{ provide: ApiService, useValue: apiService }]
-    })
-      .overrideComponent(MatrixComponent, { set: { template: '' } })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MatrixComponent);
     component = fixture.componentInstance;
@@ -50,5 +48,16 @@ describe('MatrixComponent', () => {
       ordin0: 5,
       ordin1: 1
     });
+  });
+
+  it('renders one solution card and one Solve next button', () => {
+    component.showEditor = false;
+    component.results = [2, 1];
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('.solution-title').length).toBe(1);
+    expect(fixture.nativeElement.querySelectorAll('.solution-row').length).toBe(2);
+    const solveNextButtons = fixture.nativeElement.querySelectorAll('button') as NodeListOf<HTMLButtonElement>;
+    expect(Array.from(solveNextButtons).filter(button => button.textContent?.trim() === 'Solve next').length).toBe(1);
   });
 });
