@@ -46,6 +46,7 @@ private blinkTimer?: any;
   // --- status obliczeń (zachowane nazwy) ---
   results: number[] = [];
   matrixSingular = false;
+  private singularMatrixSnapshot: string | null = null;
   okToCompleteMatrixForm = false;
   okToCompleteOrdinatesForm = false;
   // --- walidacja w locie + animacja pulsowania ---
@@ -53,6 +54,11 @@ private blinkTimer?: any;
   invalidBlink = new Set<string>();
   pasteStatus = '';
   private pasteStatusTimer?: ReturnType<typeof setTimeout>;
+
+  get hasChangedSingularMatrix(): boolean {
+    return this.singularMatrixSnapshot !== null
+      && this.getMatrixFingerprint() !== this.singularMatrixSnapshot;
+  }
 
   @ViewChild('matrixWrap', { static: true })
   private matrixWrap!: ElementRef<HTMLElement>;
@@ -113,6 +119,8 @@ private blinkTimer?: any;
 
     this.matrixForm = this.fb.group(groupCells);
     this.ordinatesForm = this.fb.group(groupOrdin);
+    this.matrixSingular = false;
+    this.singularMatrixSnapshot = null;
   }
 
   // --- obsługa formularza stopnia ---
@@ -274,12 +282,23 @@ private blinkTimer?: any;
     this.okToCompleteMatrixForm = false;
     this.okToCompleteOrdinatesForm = false;
     this.matrixSingular = false;
+    this.singularMatrixSnapshot = null;
     this.pasteStatus = '';
     this.focusGridCell(0, 0);
   }
 
   private normalizeNumericText(value: string): string {
     return value.trim().replace(/,/g, '.');
+  }
+
+  private getMatrixFingerprint(): string {
+    return JSON.stringify(this.rows.map((_, row) => this.cols.map((_, column) => {
+      const value = this.normalizeNumericText(
+        String(this.matrixForm.get(`cell${row}_${column}`)?.value ?? '')
+      );
+      const numericValue = Number(value);
+      return value !== '' && Number.isFinite(numericValue) ? numericValue : value;
+    })));
   }
 
   private isCaretAtEdge(target: EventTarget | null, edge: 'start' | 'end'): boolean {
@@ -408,6 +427,8 @@ afterBlur(name: string): void {
 
   // --- przyciski akcji: podstawki (Twoja logika może je nadpisać/uzupełnić) ---
  submitMatrixForm(): void {
+  if (this.matrixSingular && !this.hasChangedSingularMatrix) return;
+
   const matrixData = this.matrixForm.value;
 
   // zamiana stringów na number (tak masz w oryginale)
@@ -419,6 +440,7 @@ afterBlur(name: string): void {
 
   if (this.matrixForm.valid) {
     this.matrixSingular = false;
+    this.singularMatrixSnapshot = null;
     this.matrixForm.disable();
     this.okToCompleteOrdinatesForm = false;
     this.okToCompleteMatrixForm = false;
@@ -452,6 +474,7 @@ afterBlur(name: string): void {
 }
 
 private handleSingularMatrixError(): void {
+  this.singularMatrixSnapshot = this.getMatrixFingerprint();
   this.matrixForm.enable();
   this.ordinatesForm.enable();
   this.matrixForm.setErrors(null);

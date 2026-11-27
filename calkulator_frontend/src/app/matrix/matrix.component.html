@@ -165,7 +165,7 @@
     <div class="buttons-row">
       <button
         *ngIf="matrixForm.dirty && matrixForm.valid"
-        [disabled]="matrixForm.invalid && (!okToCompleteMatrixForm || !matrixForm.errors?.['singularMatrix'])"
+        [disabled]="(matrixForm.invalid && (!okToCompleteMatrixForm || !matrixForm.errors?.['singularMatrix'])) || (matrixSingular && !hasChangedSingularMatrix)"
         type="button"
         class="btn btn-primary buttonwidth buttonsMargin btn-equal"
         (click)="submitMatrixForm()"
