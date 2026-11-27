@@ -84,10 +84,25 @@ describe('MatrixComponent', () => {
     expect(component.matrixForm.enabled).toBeTrue();
     expect(component.okToCompleteOrdinatesForm).toBeFalse();
     expect(fixture.nativeElement.textContent).toContain('This matrix is singular. Change the matrix and submit it again.');
-    const seeResultButtons = Array.from(
+    const buttons = Array.from(
       fixture.nativeElement.querySelectorAll('button') as NodeListOf<HTMLButtonElement>
-    ).filter(button => button.textContent?.trim() === 'See result');
-    expect(seeResultButtons.length).toBe(0);
+    );
+    expect(buttons.filter(button => button.textContent?.trim() === 'See result').length).toBe(0);
+
+    const submitMatrixButton = buttons.find(button => button.textContent?.trim() === 'Submit matrix');
+    expect(submitMatrixButton).toBeDefined();
+    expect(submitMatrixButton?.disabled).toBeTrue();
+
+    component.submitMatrixForm();
+    expect(apiService.postMatrixData).toHaveBeenCalledTimes(1);
+
+    component.matrixForm.get('cell0_0')?.setValue('1.5');
+    fixture.detectChanges();
+    expect(submitMatrixButton?.disabled).toBeFalse();
+
+    component.matrixForm.get('cell0_0')?.setValue('1');
+    fixture.detectChanges();
+    expect(submitMatrixButton?.disabled).toBeTrue();
 
     component.submitOrdinatesForm();
     expect(apiService.postOrdinatesData).not.toHaveBeenCalled();
