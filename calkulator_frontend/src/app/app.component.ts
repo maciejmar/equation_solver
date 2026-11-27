@@ -2,8 +2,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AdMob, BannerAdSize, BannerAdPosition } from '@capacitor-community/admob';
 import type { BannerAdOptions } from '@capacitor-community/admob';
-import { AppUpdate, AppUpdateAvailability } from '@capawesome/capacitor-app-update';
-import { Capacitor } from '@capacitor/core';
+import { AppUpdateAvailability } from '@capawesome/capacitor-app-update';
+import { AppUpdateService } from './app-update.service';
 import { environment } from '../environments/environment';
 
 @Component({
@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
   updateInProgress = false;
   availableVersionName: string | null = null;
 
-  constructor() { }
+  constructor(private appUpdateService: AppUpdateService) { }
 
   async ngOnInit(): Promise<void> {
     await this.checkForRequiredUpdate();
@@ -46,13 +46,13 @@ export class AppComponent implements OnInit {
   }
 
   private async checkForRequiredUpdate(): Promise<void> {
-    if (Capacitor.getPlatform() !== 'android') {
+    if (!this.appUpdateService.isAndroid()) {
       this.updateCheckComplete = true;
       return;
     }
 
     try {
-      const info = await AppUpdate.getAppUpdateInfo();
+      const info = await this.appUpdateService.getAppUpdateInfo();
       const updateAvailable = info.updateAvailability === AppUpdateAvailability.UPDATE_AVAILABLE;
       const updateInProgress = info.updateAvailability === AppUpdateAvailability.UPDATE_IN_PROGRESS;
 
@@ -80,7 +80,7 @@ export class AppComponent implements OnInit {
 
     this.updateInProgress = true;
     try {
-      await AppUpdate.performImmediateUpdate();
+      await this.appUpdateService.performImmediateUpdate();
     } catch (error) {
       // Keep the app gate active so the user can retry or open Google Play.
       console.warn('Immediate app update did not complete:', error);
@@ -94,7 +94,7 @@ export class AppComponent implements OnInit {
 
     this.updateInProgress = true;
     try {
-      const info = await AppUpdate.getAppUpdateInfo();
+      const info = await this.appUpdateService.getAppUpdateInfo();
       const updateAvailable = info.updateAvailability === AppUpdateAvailability.UPDATE_AVAILABLE;
       const updateInProgress = info.updateAvailability === AppUpdateAvailability.UPDATE_IN_PROGRESS;
 
@@ -106,9 +106,9 @@ export class AppComponent implements OnInit {
       }
 
       if (updateInProgress || info.immediateUpdateAllowed) {
-        await AppUpdate.performImmediateUpdate();
+        await this.appUpdateService.performImmediateUpdate();
       } else {
-        await AppUpdate.openAppStore();
+        await this.appUpdateService.openAppStore();
       }
     } catch (error) {
       console.warn('Unable to start the required update:', error);
