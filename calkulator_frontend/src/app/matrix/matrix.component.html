@@ -207,37 +207,18 @@
       </div>
     </div>
 
-    <div class="solution-panel" *ngIf="results?.length">
+    <div class="solution-panel" *ngIf="!isSolving && results?.length">
       <div class="solution-title">The solution is:</div>
       <div class="solution-row" *ngFor="let r of results; let i = index">
         x<sub>{{ i + 1 }}</sub> = <span class="num">{{ r | number:'1.0-6' }}</span>
       </div>
     </div>
-    <!-- TRYB WYNIKÓW -->
-<ng-container *ngIf="!showEditor">
-  <div #eqPreview class="equations-preview compact" [style.fontSize.px]="equationFontPx" *ngIf="rows?.length && cols?.length">
-    <!-- ... zostaje bez zmian ... -->
-  </div>
 
-  <!-- NOWE: stan liczenia -->
-  <div class="solution-panel" *ngIf="isSolving">
-    Computing the solution…
-  </div>
-
-  <!-- Pokaż wyniki, gdy przyszły liczby -->
-  <div class="solution-panel" *ngIf="!isSolving && results?.length">
-    <div class="solution-title">The solution is:</div>
-    <div class="solution-row" *ngFor="let r of results; let i = index">
-      x<sub>{{ i + 1 }}</sub> = <span class="num">{{ r | number:'1.0-6' }}</span>
+    <div class="solution-panel" *ngIf="isSolving">
+      Computing the solution…
     </div>
-  </div>
 
-  <div class="buttons-row" *ngIf="!isSolving">
-    <button type="button" class="btn btn-primary btn-equal" (click)="solveNext()">Solve next</button>
-  </div>
-</ng-container>
-
-    <div class="buttons-row">
+    <div class="buttons-row" *ngIf="!isSolving && results?.length">
       <button type="button" class="btn btn-primary btn-equal" (click)="solveNext()">Solve next</button>
     </div>
   </ng-container>
