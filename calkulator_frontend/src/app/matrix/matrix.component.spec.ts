@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { MatrixComponent } from './matrix.component';
 import { ApiService } from '../api.service';
@@ -59,5 +59,37 @@ describe('MatrixComponent', () => {
     expect(fixture.nativeElement.querySelectorAll('.solution-row').length).toBe(2);
     const solveNextButtons = fixture.nativeElement.querySelectorAll('button') as NodeListOf<HTMLButtonElement>;
     expect(Array.from(solveNextButtons).filter(button => button.textContent?.trim() === 'Solve next').length).toBe(1);
+  });
+
+  it('asks for a new matrix and blocks solving when the matrix is singular', () => {
+    component.profileForm.get('degree')?.setValue(2);
+    component.onSubmit1();
+    component.matrixForm.setValue({
+      cell0_0: '1',
+      cell0_1: '2',
+      cell1_0: '2',
+      cell1_1: '4'
+    });
+    component.matrixForm.markAsDirty();
+    component.ordinatesForm.setValue({ ordin0: '3', ordin1: '6' });
+    component.ordinatesForm.markAsDirty();
+    apiService.postMatrixData.and.returnValue(throwError(() => ({
+      error: { error: 'Matrix is singular, cannot proceed' }
+    })));
+
+    component.submitMatrixForm();
+    fixture.detectChanges();
+
+    expect(component.matrixSingular).toBeTrue();
+    expect(component.matrixForm.enabled).toBeTrue();
+    expect(component.okToCompleteOrdinatesForm).toBeFalse();
+    expect(fixture.nativeElement.textContent).toContain('This matrix is singular. Change the matrix and submit it again.');
+    const seeResultButtons = Array.from(
+      fixture.nativeElement.querySelectorAll('button') as NodeListOf<HTMLButtonElement>
+    ).filter(button => button.textContent?.trim() === 'See result');
+    expect(seeResultButtons.length).toBe(0);
+
+    component.submitOrdinatesForm();
+    expect(apiService.postOrdinatesData).not.toHaveBeenCalled();
   });
 });
