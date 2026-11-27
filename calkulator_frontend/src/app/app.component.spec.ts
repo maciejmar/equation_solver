@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Capacitor } from '@capacitor/core';
 import { AppUpdate, AppUpdateAvailability } from '@capawesome/capacitor-app-update';
@@ -16,7 +17,7 @@ describe('AppComponent', () => {
     adMobBannerSpy = spyOn(AdMob, 'showBanner').and.returnValue(Promise.resolve());
 
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
+      imports: [CommonModule, RouterTestingModule],
       declarations: [AppComponent]
     }).compileComponents();
   });
