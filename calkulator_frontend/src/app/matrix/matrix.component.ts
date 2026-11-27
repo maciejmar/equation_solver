@@ -418,9 +418,9 @@ afterBlur(name: string): void {
   console.log('Processed matrix data:', matrixData);
 
   if (this.matrixForm.valid) {
-    // zablokuj edycję macierzy do czasu wejścia w wektor b
+    this.matrixSingular = false;
     this.matrixForm.disable();
-    this.okToCompleteOrdinatesForm = true;
+    this.okToCompleteOrdinatesForm = false;
     this.okToCompleteMatrixForm = false;
 
     // WYWOŁANIE BACKENDU
@@ -433,15 +433,13 @@ afterBlur(name: string): void {
         delete errs['backend'];
         this.matrixForm.setErrors(Object.keys(errs).length ? errs : null);
         this.matrixSingular = false;
+        this.okToCompleteOrdinatesForm = true;
       },
       error: (error) => {
         console.log('error in submitting matrix -', error);
         if (error?.error && error.error.error === 'Matrix is singular, cannot proceed') {
-          // specjalna obsługa singularności
-          this.matrixForm.setErrors({ singularMatrix: 'Matrix is singular, cannot proceed' });
-          this.matrixSingular = true;
-          // możesz też zablokować przejście do wektora b, jeśli tak chcesz:
-          // this.okToCompleteOrdinatesForm = false;
+          this.handleSingularMatrixError();
+          return;
         }
         // ogólny błąd backendu na formularzu
         this.matrixForm.setErrors({ backend: error?.error?.error || 'Backend error' });
@@ -453,11 +451,24 @@ afterBlur(name: string): void {
   }
 }
 
+private handleSingularMatrixError(): void {
+  this.matrixForm.enable();
+  this.ordinatesForm.enable();
+  this.matrixForm.setErrors(null);
+  this.matrixSingular = true;
+  this.okToCompleteOrdinatesForm = false;
+  this.okToCompleteMatrixForm = true;
+  this.results = [];
+  this.isSolving = false;
+  this.showEditor = true;
+  this.cdr.detectChanges();
+}
+
   submitOrdinatesForm(): void {
   const matrix = this.getMatrixFromForm();
   const ordinates = this.getVectorFromForm();
 
-  if (!this.ordinatesForm.valid || !this.okToCompleteOrdinatesForm || matrix === null || ordinates === null) {
+  if (this.matrixSingular || !this.ordinatesForm.valid || !this.okToCompleteOrdinatesForm || matrix === null || ordinates === null) {
     this.matrixForm.markAllAsTouched();
     this.ordinatesForm.markAllAsTouched();
     return;
@@ -486,6 +497,10 @@ afterBlur(name: string): void {
     },
     error: (error) => {
       console.error('Ordinates submit error:', error);
+      if (error?.error?.error === 'Matrix is singular, cannot proceed') {
+        this.handleSingularMatrixError();
+        return;
+      }
       const errs = { ...(this.matrixForm.errors || {}) };
       errs['backend'] = error?.error?.error || 'Backend error';
       this.matrixForm.setErrors(errs);

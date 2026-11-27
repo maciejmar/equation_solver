@@ -157,6 +157,10 @@
       </div>
     </div>
 
+    <div class="solution-panel singular-matrix-warning" *ngIf="matrixSingular" role="alert">
+      This matrix is singular. Change the matrix and submit it again.
+    </div>
+
     <!-- Przyciski Submit / See result -->
     <div class="buttons-row">
       <button
@@ -170,8 +174,8 @@
       </button>
 
       <button
-        *ngIf="ordinatesForm.dirty && ordinatesForm.valid && !okToCompleteMatrixForm && !matrixForm.errors?.['singularMatrix']"
-        [disabled]="!ordinatesForm.valid"
+        *ngIf="ordinatesForm.dirty && ordinatesForm.valid && okToCompleteOrdinatesForm && !okToCompleteMatrixForm && !matrixSingular"
+        [disabled]="!ordinatesForm.valid || !okToCompleteOrdinatesForm || matrixSingular"
         type="button"
         class="btn btn-primary blink_me btn-equal"
         (click)="submitOrdinatesForm()"
